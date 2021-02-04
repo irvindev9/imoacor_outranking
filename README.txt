@@ -17,7 +17,7 @@ The programa has been coded in C language under Linux.
 
 In order to compile iMOACOR, you just need to type the following:
 
-$ gcc -o imoacor -O2 -lm iMOACOR.c c_files/*.c
+$ gcc -o imoacor -O2 iMOACOR.c c_files/*.c -lm
 
 Hence, the executable program will be called: imoacor.
 

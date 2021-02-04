@@ -103,10 +103,12 @@ void run(int exec){;
 		size = M + T.nap;	
 		normalizeObjFuncs(size, _ANTS_TYPE_);			
 		// R2ranking(size);
+		// ORanking(size);
 		PheromoneUpdate(size);
 		// R2rankingPheromones();
 		genCounter++;		
 	}
+	ORanking(size);
 	readData();
 	saveParetoFront(exec, T.pheromones, T.nap);
 	saveParetoSet(exec, T.pheromones, T.nap);

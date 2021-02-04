@@ -105,7 +105,10 @@ void (*F)(double *, double *);	/* Pointer to objective function */
 int cont;						
 int numIt;
 
-float W[100];
-float U[100];
+float vectorW[100];
+float vectorU[100];
+float vectorS[100];
+float vectorV[100];
+
 
 #endif

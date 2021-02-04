@@ -8,5 +8,6 @@
 #include "../Global.h"
 
 void readData();
+void ORanking(int);
 
 #endif
