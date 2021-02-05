@@ -109,7 +109,7 @@ void run(int exec){;
 		genCounter++;		
 	}
 	ORanking(size);
-	readData();
+	// readData();
 	saveParetoFront(exec, T.pheromones, T.nap);
 	saveParetoSet(exec, T.pheromones, T.nap);
 }
