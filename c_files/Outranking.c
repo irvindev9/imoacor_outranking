@@ -33,42 +33,59 @@ void readData(){
 	}
 }
 
-void ORanking(size){
+void ORanking(int size){
 	// initValues();
+	printf("%d\n", T.nap);
 	int i, j;
 
 	float concordanciaArray[T.nap][T.nap];
 	float discordanciaArray[T.nap][T.nap];
 	float sigmaArray[T.nap][T.nap];
 	float preferencesArray[T.nap][T.nap];
+	float frontierArray[T.nap][3]; // 0 = strict, 1 = weak - k, 2 = flujo neto
 
 	for(i = 0; i < T.nap; i++){	
 		for(j = 0; j < T.nap; j++){
-			if(i != j){
-				concordanciaArray[i][j] = concordanse(i, j);
-				discordanciaArray[i][j] = discordanse(i, j);
-				if(concordanciaArray[i][j] == -1 || discordanciaArray[i][j] == -1){
-					sigmaArray[i][j] = -1.1;
-				}else{
-					sigmaArray[i][j] = concordanciaArray[i][j] * discordanciaArray[i][j];
-				}
-				
-			}else{
-				concordanciaArray[i][j] = -1;
-				discordanciaArray[i][j] = -1;
-				sigmaArray[i][j] = -1;
-			}
+			concordanciaArray[i][j] = concordanse(i, j);
+			discordanciaArray[i][j] = discordanse(i, j);
+
+			sigmaArray[i][j] = concordanciaArray[i][j] * discordanciaArray[i][j];
+		}
+	}
+
+	float netscore[T.nap];
+
+	for(i = 0; i < T.nap; i++){
+		netscore[i] = 0;
+		for(j = 0; j < T.nap; j++){
+			netscore[i] += (sigmaArray[i][j] - sigmaArray[j][i]);
 		}
 	}
 	
 	for(i = 0; i < T.nap; i++){	
+		frontierArray[i][0] = 0;
+		frontierArray[i][1] = 0;
+		frontierArray[i][2] = 0;
 		for(j = 0; j < T.nap; j++){
 			if(i != j){
-				if(sigmaArray[i][j] == -1.1){
-					preferencesArray[i][j] = 2;
-				}else{
-					preferencesArray[i][j] = preferenceIdentifier(sigmaArray[i][j], sigmaArray[j][i], xdominatey(i, j));
+
+				preferencesArray[i][j] = preferenceIdentifier(sigmaArray[i][j], sigmaArray[j][i], xdominatey(i, j));
+
+				// Estrictamente dominada
+				if(preferencesArray[i][j] == 1){
+					frontierArray[i][0] += 1;
 				}
+
+				// Debilmente dominadas / k-preferencia
+				if(preferencesArray[i][j] == 3 || preferencesArray[i][j] == 5){
+					frontierArray[i][1] += 1;
+				}
+
+				//Flujo neto
+				if(netscore[j] > netscore[i]){
+					frontierArray[i][2] += 1;
+				}
+				// frontierArray[i][2] += (sigmaArray[i][j] - sigmaArray[j][i]);;
 				
 			}else{
 				preferencesArray[i][j] = 0;
@@ -85,11 +102,12 @@ void ORanking(size){
 	}
 
 	for(i = 0; i < T.nap; i++){	
-		for(j = 0; j < T.nap; j++){
+		// for(j = 0; j < T.nap; j++){
 			// if(preferencesArray[i][j] != 0)
-			fprintf(arch, "Sigma(%d, %d) = %f; Sigma(%d, %d) = %f; Relation: %d \n", i, j, sigmaArray[i][j], j, i, sigmaArray[j][i], (int)preferencesArray[i][j]);
+			// fprintf(arch, "Sigma(%d, %d) = %f; Sigma(%d, %d) = %f; Relation: %d \n", i, j, sigmaArray[i][j], j, i, sigmaArray[j][i], (int)preferencesArray[i][j]);
+			fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
 			// printf("Sigma(%d, %d) = %f; Sigma(%d, %d) = %f; Relation: %d \n", i, j, sigmaArray[i][j], j, i, sigmaArray[j][i], (int)preferencesArray[i][j]);
-		}
+		// }
 	}
 	fclose(arch);
 	
@@ -98,7 +116,7 @@ void ORanking(size){
 void initValues(){
 	int i, j;
 	weights[0] = 0.2;
-	weights[1] = 0.3;
+	weights[1] = 0.4;
 	weights[2] = 0.1;
 	weights[3] = 0.2;
 	weights[4] = 0.1;
@@ -110,10 +128,10 @@ void initValues(){
 		vectorU[i] = generateRandomValue(0.01, 0.04);
 		vectorS[i] = (veto + indiferencia) / 2;
 		vectorV[i] = generateRandomValue(0.10, 0.20);
-		printf("W: %f\n", vectorW[i]);
-		printf("U: %f\n", vectorU[i]);
-		printf("S: %f\n", vectorS[i]);
-		printf("V: %f\n", vectorV[i]);
+		printf("W_%d: %f\n", i, vectorW[i]);
+		printf("U_%d: %f\n", i, vectorU[i]);
+		printf("S_%d: %f\n", i, vectorS[i]);
+		printf("V_%d: %f\n", i, vectorV[i]);
 	}
 }
 
@@ -124,7 +142,7 @@ float generateRandomValue(float a, float b) {
     return a + r;
 }
 
-float concordanse(index1, index2){
+float concordanse(int index1, int index2){
 	// c(x1, x2) = c1(x1, x2) + c2(x1, x2) + c3(x1, x2) + ...
 	// printf("%d %d\n", index1, index2);
 	float total = 0;
@@ -140,30 +158,29 @@ float concordanse(index1, index2){
 		}
 
 
+		boolean xIky;
+		boolean xPky;
 
 		if(maxvalue == 0){
-			// printf("0 %f,%f\n", maxvalue, T.pheromones[index2].Fx[i]);
-			return -1; // 2 = Indifference
+			xIky = TRUE;
+			xPky = FALSE;
 		}else{
-			// printf("!0 %f,%f\n", maxvalue, T.pheromones[index2].Fx[i]);
+			xIky = (abs(T.pheromones[index1].Fx[i] - T.pheromones[index2].Fx[i]) / maxvalue) <= vectorU[i];
+
+			xPky = T.pheromones[index1].Fx[i] < T.pheromones[index2].Fx[i] && !(xIky);
 		}
-
-		boolean xIky = (abs(T.pheromones[index1].Fx[i] - T.pheromones[index2].Fx[i]) / maxvalue) <= vectorU[i];
-
-		boolean xPky =T.pheromones[index1].Fx[i] > T.pheromones[index2].Fx[i] && !(xIky);
 
 		if(xPky || xIky){
 			total += vectorW[i];
 		}
-	}
-	if(total == 0){
-		// printf("c 0\n");
+
+		
 	}
 
 	return total;
 }
 
-float discordanse(index1, index2){
+float discordanse(int index1, int index2){
 	// d(x1, x2) = min{1-d1(x1, x2), 1-d2(x1, x2), 1-d3(x1, x2), ... }
 
 	float min_value = 1;
@@ -179,30 +196,27 @@ float discordanse(index1, index2){
 			maxvalue = T.pheromones[index1].Fx[i];
 		}
 		if(maxvalue == 0){
-			// printf("0 %f,%f\n", maxvalue, T.pheromones[index2].Fx[i]);
-			return -1; // 2 = Indifference
+			result = 0;
 		}else{
 			// printf("!0 %f,%f\n", maxvalue, T.pheromones[index2].Fx[i]);
-		}
-		float dis = (T.pheromones[index2].Fx[i] - T.pheromones[index1].Fx[i])/maxvalue;
+			float dis = (T.pheromones[index1].Fx[i] - T.pheromones[index2].Fx[i])/maxvalue;
 
-		if(dis < vectorS[i]){
-			result = 0;
-		}
-		if(vectorS[i] < dis < vectorV[i]){
-			result = (dis - vectorU[i]) / (vectorV[i] - vectorU[i]);
-		}
-		if(dis > vectorV[i]){
-			result = 1;
+			if(dis < vectorS[i]){
+				result = 0;
+			}
+			if(vectorS[i] < dis < vectorV[i]){
+				result = (dis - vectorU[i]) / (vectorV[i] - vectorU[i]);
+			}
+			if(dis > vectorV[i]){
+				result = 1;
+			}
 		}
 
 		if((1 - result) < min_value){
 			min_value = 1 - result;
 		}
 	}
-	if(min_value == 0){
-		// printf("d 0");
-	}
+
 	return min_value;
 }
 
@@ -213,9 +227,9 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 
 	// Agregar dominancia * !
 	// Encontrar por que no entra a 3 y 5 * !
-	// Calcular no dominada, debilmente, flujo neto
+	// Calcular no dominada, debilmente, flujo neto (3, 4, 7)
 
-	if(xdominatey || ((sigma_x >= Lamdba) && (sigma_y < 0.5)) || ((sigma_x >= Lamdba) && (0.5 <= sigma_y < Lamdba) && (sigma_x - sigma_y >= Beta))){
+	if(xdominatey || ((sigma_x >= Lamdba) && (sigma_y < 0.5)) || ((sigma_x >= Lamdba) && ((0.5 <= sigma_y) && (sigma_y < Lamdba)) && (sigma_x - sigma_y >= Beta))){
 		result = 1;
 		xPy = TRUE;
 	}else{
@@ -237,30 +251,31 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 		result = 4;
 	}
 
-	if((0.5 <= sigma_x <= Lamdba) && (sigma_y < 0.5) && ((sigma_x - sigma_y) > (Beta / 2))){
+	if(((0.5 <= sigma_x) && (sigma_x <= Lamdba)) && (sigma_y < 0.5) && ((sigma_x - sigma_y) > (Beta / 2))){
 		result = 5;
 	}
 
 	return result;
 }
 
-boolean xdominatey(index1, index2){
-	int max = 0;
-	int min = 0;
+boolean xdominatey(int index1, int index2){
+	int atleastone = 0;
+	int minlimit = 0;
 	int i;
 
 	for(i = 0; i < k; i++){
-		if(T.pheromones[index1].Fx[i] < T.pheromones[index2].Fx[i]){
-			min++;
-		}
 		if(T.pheromones[index1].Fx[i] > T.pheromones[index2].Fx[i]){
-			max++;
+			minlimit++; 
+		}
+		if(T.pheromones[index1].Fx[i] < T.pheromones[index2].Fx[i]){
+			atleastone++;
 		}
 	}
 
-	if(min == 0 && max > 0){
+	if(minlimit == 0 && atleastone > 0){
 		return TRUE;
 	}else{
 		return FALSE;
 	}
 }
+

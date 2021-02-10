@@ -78,7 +78,7 @@ double calculateWeights(){
 	int i, size = T.nap;
 	double S = 0.0;
 	for (i = 0; i < size; i++){
-        T.w[i] = exp (-1.0*pow(T.pheromones[i].rank - 1.0, 2)/(2.0*pow(q, 2)*pow(size, 2)))/(q*size*sqrt(2.0*M_PI));
+        T.w[i] = exp (-1.0*pow(T.pheromones[i].rank - 1.0, 2)/(2.0*pow(q, 2)*pow(size, 2)))/(q*size*sqrt(2.0*M_PI));  // $%$ rank hay que cambiar
         S += T.w[i];
     }
     return S;
