@@ -6,14 +6,20 @@
 #include <math.h>
 
 #include "../Global.h"
+#include "ScalarizingFunctions.h"
+#include "Comparisons.h"
 
 void readData();
 void ORanking(int);
 void initValues();
-float concordanse(int, int);
-float discordanse(int, int);
+float concordance(int, int);
+float discordance(int, int);
 float preferenceIdentifier(float, float, boolean);
 float generateRandomValue(float, float);
 boolean xdominatey(int, int);
+void ORankingAnts(int);
+float concordanceAnts(int, int);
+float discordanceAnts(int, int);
+boolean xdominateyAnts(int, int);
 
 #endif

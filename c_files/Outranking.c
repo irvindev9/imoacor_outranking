@@ -34,8 +34,6 @@ void readData(){
 }
 
 void ORanking(int size){
-	// initValues();
-	printf("%d\n", T.nap);
 	int i, j;
 
 	float concordanciaArray[T.nap][T.nap];
@@ -46,8 +44,8 @@ void ORanking(int size){
 
 	for(i = 0; i < T.nap; i++){	
 		for(j = 0; j < T.nap; j++){
-			concordanciaArray[i][j] = concordanse(i, j);
-			discordanciaArray[i][j] = discordanse(i, j);
+			concordanciaArray[i][j] = concordance(i, j);
+			discordanciaArray[i][j] = discordance(i, j);
 
 			sigmaArray[i][j] = concordanciaArray[i][j] * discordanciaArray[i][j];
 		}
@@ -68,7 +66,6 @@ void ORanking(int size){
 		frontierArray[i][2] = 0;
 		for(j = 0; j < T.nap; j++){
 			if(i != j){
-
 				preferencesArray[i][j] = preferenceIdentifier(sigmaArray[i][j], sigmaArray[j][i], xdominatey(i, j));
 
 				// Estrictamente dominada
@@ -85,7 +82,6 @@ void ORanking(int size){
 				if(netscore[j] > netscore[i]){
 					frontierArray[i][2] += 1;
 				}
-				// frontierArray[i][2] += (sigmaArray[i][j] - sigmaArray[j][i]);;
 				
 			}else{
 				preferencesArray[i][j] = 0;
@@ -102,15 +98,20 @@ void ORanking(int size){
 	}
 
 	for(i = 0; i < T.nap; i++){	
-		// for(j = 0; j < T.nap; j++){
-			// if(preferencesArray[i][j] != 0)
-			// fprintf(arch, "Sigma(%d, %d) = %f; Sigma(%d, %d) = %f; Relation: %d \n", i, j, sigmaArray[i][j], j, i, sigmaArray[j][i], (int)preferencesArray[i][j]);
-			fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
-			// printf("Sigma(%d, %d) = %f; Sigma(%d, %d) = %f; Relation: %d \n", i, j, sigmaArray[i][j], j, i, sigmaArray[j][i], (int)preferencesArray[i][j]);
-		// }
+		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
+		T.pheromones[i].strictOR = (int)frontierArray[i][0];
+		T.pheromones[i].weakOR = (int)frontierArray[i][1];
+		T.pheromones[i].netscoreOR = (int)frontierArray[i][2];
 	}
-	fclose(arch);
 	
+	qsort(T.pheromones, MAX_ARCHIVE_SIZE, sizeof(PHEROMONE), (int (*)(const void *, const void *))&compare_pheromone_alpha_or);
+
+	for(i = 0; i < T.nap; i++){	
+		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, T.pheromones[i].strictOR, T.pheromones[i].weakOR, T.pheromones[i].netscoreOR);
+	}
+
+	fclose(arch);
+
 }
 
 void initValues(){
@@ -142,45 +143,28 @@ float generateRandomValue(float a, float b) {
     return a + r;
 }
 
-float concordanse(int index1, int index2){
+float concordance(int index1, int index2){
 	// c(x1, x2) = c1(x1, x2) + c2(x1, x2) + c3(x1, x2) + ...
-	// printf("%d %d\n", index1, index2);
 	float total = 0;
 	int i;
 
 	for(i = 0; i < k; i++){
-		float maxvalue = 0;
-
-		if(T.pheromones[index1].Fx[i] < T.pheromones[index2].Fx[i]){
-			maxvalue = T.pheromones[index2].Fx[i];
-		}else{
-			maxvalue = T.pheromones[index1].Fx[i];
-		}
-
-
 		boolean xIky;
 		boolean xPky;
 
-		if(maxvalue == 0){
-			xIky = TRUE;
-			xPky = FALSE;
-		}else{
-			xIky = (abs(T.pheromones[index1].Fx[i] - T.pheromones[index2].Fx[i]) / maxvalue) <= vectorU[i];
+		xIky = abs(T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i]) <= vectorU[i];
 
-			xPky = T.pheromones[index1].Fx[i] < T.pheromones[index2].Fx[i] && !(xIky);
-		}
+		xPky = T.pheromones[index1].nFx[i] < T.pheromones[index2].nFx[i] && !(xIky);
 
 		if(xPky || xIky){
 			total += vectorW[i];
 		}
-
-		
 	}
 
 	return total;
 }
 
-float discordanse(int index1, int index2){
+float discordance(int index1, int index2){
 	// d(x1, x2) = min{1-d1(x1, x2), 1-d2(x1, x2), 1-d3(x1, x2), ... }
 
 	float min_value = 1;
@@ -188,28 +172,17 @@ float discordanse(int index1, int index2){
 
 	for(i = 0;i < k;i++){
 		float result = 0;
-		float maxvalue = 0;
 
-		if(T.pheromones[index1].Fx[i] < T.pheromones[index2].Fx[i]){
-			maxvalue = T.pheromones[index2].Fx[i];
-		}else{
-			maxvalue = T.pheromones[index1].Fx[i];
-		}
-		if(maxvalue == 0){
+		float dis = T.pheromones[index1].Fx[i] - T.pheromones[index2].Fx[i];
+
+		if(dis < vectorS[i]){
 			result = 0;
-		}else{
-			// printf("!0 %f,%f\n", maxvalue, T.pheromones[index2].Fx[i]);
-			float dis = (T.pheromones[index1].Fx[i] - T.pheromones[index2].Fx[i])/maxvalue;
-
-			if(dis < vectorS[i]){
-				result = 0;
-			}
-			if(vectorS[i] < dis < vectorV[i]){
-				result = (dis - vectorU[i]) / (vectorV[i] - vectorU[i]);
-			}
-			if(dis > vectorV[i]){
-				result = 1;
-			}
+		}
+		if((vectorS[i] <= dis) && (dis < vectorV[i])){
+			result = (dis - vectorU[i]) / (vectorV[i] - vectorU[i]);
+		}
+		if(dis >= vectorV[i]){
+			result = 1;
 		}
 
 		if((1 - result) < min_value){
@@ -279,3 +252,150 @@ boolean xdominatey(int index1, int index2){
 	}
 }
 
+void ORankingAnts(int size){
+	int i, j;
+
+	float concordanciaArray[size][size];
+	float discordanciaArray[size][size];
+	float sigmaArray[size][size];
+	float preferencesArray[size][size];
+	float frontierArray[size][3];
+
+	for(i = 0; i < T.nap; i++){	
+		for(j = 0; j < T.nap; j++){
+			concordanciaArray[i][j] = concordanceAnts(i, j);
+			discordanciaArray[i][j] = discordanceAnts(i, j);
+
+			sigmaArray[i][j] = concordanciaArray[i][j] * discordanciaArray[i][j];
+		}
+	}
+
+	float netscore[size];
+
+	for(i = 0; i < size; i++){
+		netscore[i] = 0;
+		for(j = 0; j < size; j++){
+			netscore[i] += (sigmaArray[i][j] - sigmaArray[j][i]);
+		}
+	}
+
+	for(i = 0; i < size; i++){	
+		frontierArray[i][0] = 0;
+		frontierArray[i][1] = 0;
+		frontierArray[i][2] = 0;
+		for(j = 0; j < size; j++){
+			if(i != j){
+				preferencesArray[i][j] = preferenceIdentifier(sigmaArray[i][j], sigmaArray[j][i], xdominateyAnts(i, j));
+
+				// Estrictamente dominada
+				if(preferencesArray[i][j] == 1){
+					frontierArray[i][0] += 1;
+				}
+
+				// Debilmente dominadas / k-preferencia
+				if(preferencesArray[i][j] == 3 || preferencesArray[i][j] == 5){
+					frontierArray[i][1] += 1;
+				}
+
+				//Flujo neto
+				if(netscore[j] > netscore[i]){
+					frontierArray[i][2] += 1;
+				}
+				
+			}else{
+				preferencesArray[i][j] = 0;
+			}
+		}
+	}
+
+	FILE *arch;
+	char str[100] = "output/test/testants.txt";
+	arch = fopen(str, "w");
+	if(arch == NULL){
+		printf("Error! The file %s couldn't be created\n", str);
+		exit(-1);
+	}
+
+	for(i = 0; i < size; i++){	
+		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
+		Ants[i].strictOR = (int)frontierArray[i][0];
+		Ants[i].weakOR = (int)frontierArray[i][1];
+		Ants[i].netscoreOR = (int)frontierArray[i][2];
+	}
+	
+	qsort(Ants, size, sizeof(ANT), (int (*)(const void *, const void *))&compare_ant_alpha_or);
+
+	for(i = 0; i < size; i++){	
+		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, Ants[i].strictOR, Ants[i].weakOR, Ants[i].netscoreOR);
+	}
+
+	fclose(arch);
+}
+
+float concordanceAnts(int index1, int index2){
+	float total = 0;
+	int i;
+
+	for(i = 0; i < k; i++){
+		boolean xIky;
+		boolean xPky;
+
+		xIky = abs(Ants[index1].nFx[i] - Ants[index2].nFx[i]) <= vectorU[i];
+
+		xPky = Ants[index1].nFx[i] < Ants[index2].nFx[i] && !(xIky);
+
+		if(xPky || xIky){
+			total += vectorW[i];
+		}
+	}
+
+	return total;
+}
+
+float discordanceAnts(int index1, int index2){
+	float min_value = 1;
+	int i;
+
+	for(i = 0;i < k;i++){
+		float result = 0;
+
+		float dis = Ants[index1].Fx[i] - Ants[index2].Fx[i];
+
+		if(dis < vectorS[i]){
+			result = 0;
+		}
+		if((vectorS[i] <= dis) && (dis < vectorV[i])){
+			result = (dis - vectorU[i]) / (vectorV[i] - vectorU[i]);
+		}
+		if(dis >= vectorV[i]){
+			result = 1;
+		}
+
+		if((1 - result) < min_value){
+			min_value = 1 - result;
+		}
+	}
+
+	return min_value;
+}
+
+boolean xdominateyAnts(int index1, int index2){
+	int atleastone = 0;
+	int minlimit = 0;
+	int i;
+
+	for(i = 0; i < k; i++){
+		if(Ants[index1].Fx[i] > Ants[index2].Fx[i]){
+			minlimit++; 
+		}
+		if(Ants[index1].Fx[i] < Ants[index2].Fx[i]){
+			atleastone++;
+		}
+	}
+
+	if(minlimit == 0 && atleastone > 0){
+		return TRUE;
+	}else{
+		return FALSE;
+	}
+}

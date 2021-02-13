@@ -211,7 +211,7 @@ void evaluatePheromones(){
 void PheromoneUpdate(int size){
 	int i, aux_index;		
 	// Updating the archive
-	qsort(Ants, size, sizeof(ANT), (int (*)(const void *, const void *))&compare_reduction);
+	qsort(Ants, size, sizeof(ANT), (int (*)(const void *, const void *))&compare_ant_alpha_or);
 	for(i = 0; i < MAX_ARCHIVE_SIZE; i++){
 		cpyvector(T.pheromones[i].x, Ants[i].x, n);
 		cpyvector(T.pheromones[i].Fx, Ants[i].Fx, k);

@@ -22,6 +22,60 @@ int compare_ant_alpha(const void *p1, const void *p2){
 	return 0;
 }
 
+int compare_ant_alpha_or(const void *p1, const void *p2){
+	ANT *a, *b;
+	double anorm, bnorm;
+	a = (ANT *)p1;
+	b = (ANT *)p2;
+
+	if(a->strictOR < b->strictOR){
+		return -1;
+	}else if(a->strictOR > b->strictOR){
+		return 1;
+	}
+
+	if(a->weakOR < b->weakOR){
+		return -1;
+	}else if(a->weakOR > b->weakOR){
+		return 1;
+	}
+
+	if(a->netscoreOR < b->netscoreOR){
+		return -1;
+	}else if(a->netscoreOR > b->netscoreOR){
+		return 1;
+	}
+
+	return 0;
+}
+
+int compare_pheromone_alpha_or(const void *p1, const void *p2){
+	PHEROMONE *a, *b;
+	double anorm, bnorm;
+	a = (PHEROMONE *)p1;
+	b = (PHEROMONE *)p2;
+
+	if(a->strictOR < b->strictOR){
+		return -1;
+	}else if(a->strictOR > b->strictOR){
+		return 1;
+	}
+
+	if(a->weakOR < b->weakOR){
+		return -1;
+	}else if(a->weakOR > b->weakOR){
+		return 1;
+	}
+
+	if(a->netscoreOR < b->netscoreOR){
+		return -1;
+	}else if(a->netscoreOR > b->netscoreOR){
+		return 1;
+	}
+
+	return 0;
+}
+
 int compare_pheromone_alpha(const void *p1, const void *p2){
 	PHEROMONE *a, *b;
 	double anorm, bnorm;

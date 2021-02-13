@@ -25,6 +25,9 @@ typedef struct ANT{
 	double *nFx;				/* Normalized objective vector */
 	double u;					/* Scalarizing value corresponding to the weight pointed out by the weight index. */
 	double alpha;				/* Current utility value. */
+	int strictOR;			/* OutRanking Strict value. */
+	int weakOR;				/* OutRanking weak or k-preference value. */
+	int netscoreOR;			/* OutRanking netscore value. */
 	int rank;					/* Rank assigned by the R2 ranking. */
 	int weight_index;			/* index of the weight corresponding to the best utility value. */
 	int kernelIndex;			/* Index of selected the Gaussian kernel */
@@ -38,6 +41,9 @@ typedef struct PHEROMONE{
 	double *nFx; 				/* Normalized objective vector */
 	double u;					/* Scalarizing value */
 	double alpha;
+	int strictOR;			/* OutRanking Strict value. */
+	int weakOR;				/* OutRanking weak or k-preference value. */
+	int netscoreOR;			/* OutRanking netscore value. */
 	double mmf;					/* Maximin fitness value */
 	int rank;					/* Rank associated by the R2 ranking algorithm */
 	int rankOR;					/* Rank associated by the Outranking algorithm */

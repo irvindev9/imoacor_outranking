@@ -100,17 +100,17 @@ void run(int exec){;
 	while(genCounter < Gmax){
 		AntBasedSolutionConstruction();
 		updateRefpoints(Ants, M, k, genCounter);
-		Union();
+		Union(); // Las hormigas son las que guardan la solución
 		size = M + T.nap;	
 		normalizeObjFuncs(size, _ANTS_TYPE_);			
 		// R2ranking(size);
-		// ORanking(size);
+		ORankingAnts(size);
 		PheromoneUpdate(size);
+		ORanking(size);
 		// R2rankingPheromones();
 		genCounter++;		
 	}
-	ORanking(size);
-	// readData();
+
 	saveParetoFront(exec, T.pheromones, T.nap);
 	saveParetoSet(exec, T.pheromones, T.nap);
 }
