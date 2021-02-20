@@ -68,6 +68,42 @@ void saveParetoFront(int exec, PHEROMONE *pheromones, int size){
 	fclose(arch);
 }
 
+void saveParetoFrontNewFormat(int exec, PHEROMONE *pheromones, int size){
+	int dm_num = 1;
+	int run_exec = 1;
+
+	FILE *archivo;
+	char str[100];
+	sprintf(str, "output/%s-DM0%d-ALG-1-VAR-1-SEL-2-EXP-%d.txt", Fname, dm_num, run_exec);
+	archivo = fopen(str, "a");
+	if(archivo == NULL){
+		printf("Error! The file %s couldn't be created\n", str);
+		exit(-1);
+	}
+
+	int  i, j;
+	for(i = 0; i < size; i++){	
+		fprintf(archivo, "[ ");
+		for(j = 0; j < n; j++){
+			fprintf(archivo, "%f", pheromones[i].x[j]);
+			if(j != n - 1)
+				fprintf(archivo, " ");
+		}
+		fprintf(archivo, " ] [ ");
+		float eudist = 0;
+		for(j = 0; j < k; j++){
+			fprintf(archivo, "%.6e", pheromones[i].Fx[j]);
+			if(j != k - 1)
+				fprintf(archivo, " ");
+		}
+		eudist = sqrt(eudist);
+		
+		fprintf(archivo, " ] [ ] # 0 # 0 - ");
+		fprintf(archivo, "\n");
+	}
+	fclose(archivo);
+}
+
 void saveParetoSet(int exec, PHEROMONE *pheromones, int size){
 	FILE *arch;
 	char str[100];

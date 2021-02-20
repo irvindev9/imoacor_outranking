@@ -106,11 +106,12 @@ void run(int exec){;
 		// R2ranking(size);
 		ORankingAnts(size);
 		PheromoneUpdate(size);
-		ORanking(size);
+		ORankingPheromones(size);
 		// R2rankingPheromones();
 		genCounter++;		
 	}
 
+	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);
 	saveParetoFront(exec, T.pheromones, T.nap);
 	saveParetoSet(exec, T.pheromones, T.nap);
 }

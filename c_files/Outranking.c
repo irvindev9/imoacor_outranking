@@ -3,7 +3,7 @@
 float Epsilon = 0.1; // 0.05 a 0.1
 float Beta = 0.35; // 0.25 a 0.4
 float Lamdba = 0.6; // 0.55 a 0.75
-float weights[3];
+float weights[5];
 
 float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
 float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
@@ -33,7 +33,7 @@ void readData(){
 	}
 }
 
-void ORanking(int size){
+void ORankingPheromones(int size){
 	int i, j;
 
 	float concordanciaArray[T.nap][T.nap];
@@ -173,7 +173,7 @@ float discordance(int index1, int index2){
 	for(i = 0;i < k;i++){
 		float result = 0;
 
-		float dis = T.pheromones[index1].Fx[i] - T.pheromones[index2].Fx[i];
+		float dis = T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i];
 
 		if(dis < vectorS[i]){
 			result = 0;
@@ -359,7 +359,7 @@ float discordanceAnts(int index1, int index2){
 	for(i = 0;i < k;i++){
 		float result = 0;
 
-		float dis = Ants[index1].Fx[i] - Ants[index2].Fx[i];
+		float dis = Ants[index1].nFx[i] - Ants[index2].nFx[i];
 
 		if(dis < vectorS[i]){
 			result = 0;

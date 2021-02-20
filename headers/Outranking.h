@@ -10,7 +10,7 @@
 #include "Comparisons.h"
 
 void readData();
-void ORanking(int);
+void ORankingPheromones(int);
 void initValues();
 float concordance(int, int);
 float discordance(int, int);

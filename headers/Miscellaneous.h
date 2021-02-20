@@ -12,6 +12,7 @@
 
 void saveParetoFront(int, PHEROMONE *, int);
 void saveParetoSet(int, PHEROMONE *, int);
+void saveParetoFrontNewFormat(int, PHEROMONE *, int);
 
 
 void savePartialFront(int exec);
