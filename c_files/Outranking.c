@@ -8,6 +8,7 @@ float weights[3];
 float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
 float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
 float valueV = 0.2; // 0.2 a 0.3 > 0.10 y 0.20
+FILE *arch;
 
 // Restar los valores en ese objetivo y dividirlos sobre el valor de ese parametro en sigma
 
@@ -89,16 +90,16 @@ void ORanking(int size){
 		}
 	}
 
-	FILE *arch;
-	char str[100] = "output/test/test.txt";
-	arch = fopen(str, "w");
-	if(arch == NULL){
-		printf("Error! The file %s couldn't be created\n", str);
-		exit(-1);
-	}
+	// FILE *arch;
+	// char str[100] = "output/test/test.txt";
+	// arch = fopen(str, "w");
+	// if(arch == NULL){
+	// 	printf("Error! The file %s couldn't be created\n", str);
+	// 	exit(-1);
+	// }
 
 	for(i = 0; i < T.nap; i++){	
-		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
+		// fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
 		T.pheromones[i].strictOR = (int)frontierArray[i][0];
 		T.pheromones[i].weakOR = (int)frontierArray[i][1];
 		T.pheromones[i].netscoreOR = (int)frontierArray[i][2];
@@ -106,11 +107,11 @@ void ORanking(int size){
 	
 	qsort(T.pheromones, MAX_ARCHIVE_SIZE, sizeof(PHEROMONE), (int (*)(const void *, const void *))&compare_pheromone_alpha_or);
 
-	for(i = 0; i < T.nap; i++){	
-		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, T.pheromones[i].strictOR, T.pheromones[i].weakOR, T.pheromones[i].netscoreOR);
-	}
+	// for(i = 0; i < T.nap; i++){	
+		// fprintf(arch, "Index: %d (%d, %d, %d)\n", i, T.pheromones[i].strictOR, T.pheromones[i].weakOR, T.pheromones[i].netscoreOR);
+	// }
 
-	fclose(arch);
+	// fclose(arch);
 
 }
 
@@ -307,9 +308,8 @@ void ORankingAnts(int size){
 			}
 		}
 	}
-
-	FILE *arch;
-	char str[100] = "output/test/testants.txt";
+	
+	char str[100] = "output/test/testantss.txt";
 	arch = fopen(str, "w");
 	if(arch == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
@@ -317,7 +317,7 @@ void ORankingAnts(int size){
 	}
 
 	for(i = 0; i < size; i++){	
-		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
+		// fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
 		Ants[i].strictOR = (int)frontierArray[i][0];
 		Ants[i].weakOR = (int)frontierArray[i][1];
 		Ants[i].netscoreOR = (int)frontierArray[i][2];
