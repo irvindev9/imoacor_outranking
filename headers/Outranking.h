@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include "../Global.h"
 #include "ScalarizingFunctions.h"
@@ -11,7 +12,7 @@
 
 void readData();
 void ORankingPheromones(int);
-void initValues();
+void initValues(int);
 float concordance(int, int);
 float discordance(int, int);
 float preferenceIdentifier(float, float, boolean);

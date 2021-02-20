@@ -114,25 +114,98 @@ void ORankingPheromones(int size){
 
 }
 
-void initValues(){
+void initValues(int dm){
 	int i, j;
-	weights[0] = 0.2;
-	weights[1] = 0.4;
-	weights[2] = 0.1;
-	weights[3] = 0.2;
-	weights[4] = 0.1;
-	float wobjective = 1 / (float)k;
-	for(i = 0;i < k; i++){
-		float veto = generateRandomValue(0.01, 0.04);
-		float indiferencia = generateRandomValue(0.10, 0.20);
-		vectorW[i] = weights[i];
-		vectorU[i] = generateRandomValue(0.01, 0.04);
-		vectorS[i] = (veto + indiferencia) / 2;
-		vectorV[i] = generateRandomValue(0.10, 0.20);
-		printf("W_%d: %f\n", i, vectorW[i]);
-		printf("U_%d: %f\n", i, vectorU[i]);
-		printf("S_%d: %f\n", i, vectorS[i]);
-		printf("V_%d: %f\n", i, vectorV[i]);
+
+	FILE *archivo;
+	char str[100];
+	sprintf(str, "output/DM%d_config.txt", dm);
+	archivo = fopen(str, "r");
+	if(archivo == NULL){
+		printf("The file %s couldn't be found... creating..\n", str);
+		// exit(-1);
+		archivo = fopen(str, "w");
+		// Weights
+		fprintf(archivo, "%f ", 0.05);
+		fprintf(archivo, "%f ", 0.04);
+		fprintf(archivo, "%f ", 0.01);
+		fprintf(archivo, "%f ", 0.2);
+		fprintf(archivo, "%f ", 0.05);
+		fprintf(archivo, "%f ", 0.05);
+		fprintf(archivo, "%f ", 0.01);
+		fprintf(archivo, "%f ", 0.09);
+		fprintf(archivo, "%f ", 0.35);
+		fprintf(archivo, "%f\n", 0.15);
+
+		float vetoArray[k];
+		float indiferenciaArray[k];
+		// veto
+		for(i = 0;i < k; i++){
+			vetoArray[i] = generateRandomValue(0.10, 0.20);
+			fprintf(archivo, "%f", vetoArray[i]);
+			if(i == (k-1)){
+				fprintf(archivo, "\n");
+			}else{
+				fprintf(archivo, " ");
+			}
+		}
+
+		// indiferencia
+		for(i = 0;i < k; i++){
+			indiferenciaArray[i] = generateRandomValue(0.01, 0.04);
+			fprintf(archivo, "%f", indiferenciaArray[i]);
+			if(i == (k-1)){
+				fprintf(archivo, "\n");
+			}else{
+				fprintf(archivo, " ");
+			}
+		}
+
+		// Preveto
+		for(i = 0;i < k; i++){
+			fprintf(archivo, "%f", (vetoArray[i] + indiferenciaArray[i]) / 2);
+			if(i == (k-1)){
+				fprintf(archivo, "\n");
+			}else{
+				fprintf(archivo, " ");
+			}
+		}
+
+		fclose(archivo);
+		archivo = fopen(str, "r");
+	}
+
+	char line[5000];
+	int contlimiter = 0;
+	while( fgets(line,2000,archivo) ) {
+		// char strtext[] = line;
+		int init_size = strlen(line);
+		char delim[] = " ";
+		char *ptr = strtok(line, delim);
+		int cont_in = 0;
+		while(ptr != NULL)
+		{
+			// printf("'%s'\n", ptr);
+			if(contlimiter == 0){
+				vectorW[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 1){
+				vectorV[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 2){
+				vectorU[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 3){
+				vectorS[cont_in] = atof(ptr);
+			}
+			ptr = strtok(NULL, delim);
+			cont_in++;
+		}
+		contlimiter++;
+	}
+
+	for(i = 0; i < k; i++){
+		printf("%f ", vectorW[i]);
 	}
 }
 

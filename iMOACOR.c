@@ -94,7 +94,7 @@ void run(int exec){;
 	normalizeObjFuncs(MAX_ARCHIVE_SIZE, _PHE_TYPE_);	
 	// Apply R2ranking to the pheromones
 	// R2rankingPheromones();
-	initValues();
+	initValues(1);
 	
 	int size;	
 	while(genCounter < Gmax){
