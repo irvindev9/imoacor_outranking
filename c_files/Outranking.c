@@ -178,14 +178,12 @@ void initValues(int dm){
 	char line[5000];
 	int contlimiter = 0;
 	while( fgets(line,2000,archivo) ) {
-		// char strtext[] = line;
 		int init_size = strlen(line);
 		char delim[] = " ";
 		char *ptr = strtok(line, delim);
 		int cont_in = 0;
 		while(ptr != NULL)
 		{
-			// printf("'%s'\n", ptr);
 			if(contlimiter == 0){
 				vectorW[cont_in] = atof(ptr);
 			}
