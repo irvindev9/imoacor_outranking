@@ -8,7 +8,6 @@ float weights[3];
 float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
 float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
 float valueV = 0.2; // 0.2 a 0.3 > 0.10 y 0.20
-FILE *arch;
 
 // Restar los valores en ese objetivo y dividirlos sobre el valor de ese parametro en sigma
 
@@ -37,18 +36,18 @@ void readData(){
 void ORanking(int size){
 	int i, j;
 
-	float concordanciaArray[T.nap][T.nap];
-	float discordanciaArray[T.nap][T.nap];
+	// float concordanciaArray[T.nap][T.nap];
+	// float discordanciaArray[T.nap][T.nap];
 	float sigmaArray[T.nap][T.nap];
 	float preferencesArray[T.nap][T.nap];
 	float frontierArray[T.nap][3]; // 0 = strict, 1 = weak - k, 2 = flujo neto
 
 	for(i = 0; i < T.nap; i++){	
 		for(j = 0; j < T.nap; j++){
-			concordanciaArray[i][j] = concordance(i, j);
-			discordanciaArray[i][j] = discordance(i, j);
+			// concordanciaArray[i][j] = concordance(i, j);
+			// discordanciaArray[i][j] = discordance(i, j);
 
-			sigmaArray[i][j] = concordanciaArray[i][j] * discordanciaArray[i][j];
+			sigmaArray[i][j] = concordance(i, j) * discordance(i, j);
 		}
 	}
 
@@ -68,6 +67,9 @@ void ORanking(int size){
 		for(j = 0; j < T.nap; j++){
 			if(i != j){
 				preferencesArray[i][j] = preferenceIdentifier(sigmaArray[i][j], sigmaArray[j][i], xdominatey(i, j));
+				// if(preferencesArray[i][j] == 5){
+				// 	printf("PA: %f\n", preferencesArray[i][j]);
+				// }
 
 				// Estrictamente dominada
 				if(preferencesArray[i][j] == 1){
@@ -90,16 +92,16 @@ void ORanking(int size){
 		}
 	}
 
-	// FILE *arch;
-	// char str[100] = "output/test/test.txt";
-	// arch = fopen(str, "w");
-	// if(arch == NULL){
-	// 	printf("Error! The file %s couldn't be created\n", str);
-	// 	exit(-1);
-	// }
+	FILE *arch;
+	char str[100] = "output/test/test2.txt";
+	arch = fopen(str, "w");
+	if(arch == NULL){
+		printf("Error! The file %s couldn't be created\n", str);
+		exit(-1);
+	}
 
 	for(i = 0; i < T.nap; i++){	
-		// fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
+		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
 		T.pheromones[i].strictOR = (int)frontierArray[i][0];
 		T.pheromones[i].weakOR = (int)frontierArray[i][1];
 		T.pheromones[i].netscoreOR = (int)frontierArray[i][2];
@@ -107,33 +109,38 @@ void ORanking(int size){
 	
 	qsort(T.pheromones, MAX_ARCHIVE_SIZE, sizeof(PHEROMONE), (int (*)(const void *, const void *))&compare_pheromone_alpha_or);
 
-	// for(i = 0; i < T.nap; i++){	
-		// fprintf(arch, "Index: %d (%d, %d, %d)\n", i, T.pheromones[i].strictOR, T.pheromones[i].weakOR, T.pheromones[i].netscoreOR);
-	// }
+	for(i = 0; i < T.nap; i++){	
+		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, T.pheromones[i].strictOR, T.pheromones[i].weakOR, T.pheromones[i].netscoreOR);
+	}
 
-	// fclose(arch);
+	fclose(arch);
 
 }
 
 void initValues(){
 	int i, j;
-	weights[0] = 0.2;
-	weights[1] = 0.4;
-	weights[2] = 0.1;
-	weights[3] = 0.2;
-	weights[4] = 0.1;
+	weights[0] = 0.1;
+	weights[1] = 0.2;
+	weights[2] = 0.05;
+	weights[3] = 0.1;
+	weights[4] = 0.05;
+	weights[5] = 0.1;
+	weights[6] = 0.2;
+	weights[7] = 0.05;
+	weights[8] = 0.1;
+	weights[9] = 0.05;
 	float wobjective = 1 / (float)k;
 	for(i = 0;i < k; i++){
 		float veto = generateRandomValue(0.01, 0.04);
 		float indiferencia = generateRandomValue(0.10, 0.20);
 		vectorW[i] = weights[i];
-		vectorU[i] = generateRandomValue(0.01, 0.04);
+		vectorU[i] = indiferencia;
 		vectorS[i] = (veto + indiferencia) / 2;
-		vectorV[i] = generateRandomValue(0.10, 0.20);
-		printf("W_%d: %f\n", i, vectorW[i]);
-		printf("U_%d: %f\n", i, vectorU[i]);
-		printf("S_%d: %f\n", i, vectorS[i]);
-		printf("V_%d: %f\n", i, vectorV[i]);
+		vectorV[i] = veto;
+		// printf("W_%d: %f\n", i, vectorW[i]);
+		// printf("U_%d: %f\n", i, vectorU[i]);
+		// printf("S_%d: %f\n", i, vectorS[i]);
+		// printf("V_%d: %f\n", i, vectorV[i]);
 	}
 }
 
@@ -256,18 +263,18 @@ boolean xdominatey(int index1, int index2){
 void ORankingAnts(int size){
 	int i, j;
 
-	float concordanciaArray[size][size];
-	float discordanciaArray[size][size];
+	// float concordanciaArray[size][size];
+	// float discordanciaArray[size][size];
 	float sigmaArray[size][size];
 	float preferencesArray[size][size];
 	float frontierArray[size][3];
 
 	for(i = 0; i < T.nap; i++){	
 		for(j = 0; j < T.nap; j++){
-			concordanciaArray[i][j] = concordanceAnts(i, j);
-			discordanciaArray[i][j] = discordanceAnts(i, j);
+			// concordanciaArray[i][j] = concordanceAnts(i, j);
+			// discordanciaArray[i][j] = discordanceAnts(i, j);
 
-			sigmaArray[i][j] = concordanciaArray[i][j] * discordanciaArray[i][j];
+			sigmaArray[i][j] = concordanceAnts(i, j) * discordanceAnts(i, j);
 		}
 	}
 
@@ -287,6 +294,9 @@ void ORankingAnts(int size){
 		for(j = 0; j < size; j++){
 			if(i != j){
 				preferencesArray[i][j] = preferenceIdentifier(sigmaArray[i][j], sigmaArray[j][i], xdominateyAnts(i, j));
+				// if(preferencesArray[i][j] == 5){
+				// 	printf("PA: %f\n", preferencesArray[i][j]);
+				// }
 
 				// Estrictamente dominada
 				if(preferencesArray[i][j] == 1){
@@ -308,8 +318,9 @@ void ORankingAnts(int size){
 			}
 		}
 	}
-	
-	char str[100] = "output/test/testantss.txt";
+
+	FILE *arch;
+	char str[100] = "output/test/testants.txt";
 	arch = fopen(str, "w");
 	if(arch == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
@@ -317,10 +328,12 @@ void ORankingAnts(int size){
 	}
 
 	for(i = 0; i < size; i++){	
-		// fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
+		fprintf(arch, "Index: %d (%d, %d, %d)\n", i, (int)frontierArray[i][0], (int)frontierArray[i][1], (int)frontierArray[i][2]);
 		Ants[i].strictOR = (int)frontierArray[i][0];
 		Ants[i].weakOR = (int)frontierArray[i][1];
 		Ants[i].netscoreOR = (int)frontierArray[i][2];
+
+		// printf("%d\n",Ants[i].strictOR);
 	}
 	
 	qsort(Ants, size, sizeof(ANT), (int (*)(const void *, const void *))&compare_ant_alpha_or);
