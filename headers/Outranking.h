@@ -11,6 +11,7 @@
 #include "Comparisons.h"
 
 void readData();
+void readVars();
 void ORankingPheromones(int);
 void initValues(int);
 float concordance(int, int);

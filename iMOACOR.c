@@ -95,6 +95,7 @@ void run(int exec){;
 	// Apply R2ranking to the pheromones
 	// R2rankingPheromones();
 	initValues(1);
+	readVars();
 	
 	int size;	
 	while(genCounter < Gmax){

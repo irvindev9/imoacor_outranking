@@ -33,6 +33,34 @@ void readData(){
 	}
 }
 
+void readVars(){
+	int i;
+
+	printf("%f ", Epsilon);
+	printf("\n");
+	printf("%f ", Beta);
+	printf("\n");
+	printf("%f ", Lamdba);
+	printf("\n");
+	for(i = 0; i < k; i++){
+		printf("%f ", vectorW[i]);
+	}
+	printf("\n");
+	for(i = 0; i < k; i++){
+		printf("%f ", vectorV[i]);
+	}
+	printf("\n");
+	for(i = 0; i < k; i++){
+		printf("%f ", vectorU[i]);
+	}
+	printf("\n");
+	for(i = 0; i < k; i++){
+		printf("%f ", vectorS[i]);
+	}
+	printf("\n");
+	
+}
+
 void ORankingPheromones(int size){
 	int i, j;
 
@@ -210,29 +238,6 @@ void initValues(int dm){
 		}
 		contlimiter++;
 	}
-
-	for(i = 0; i < k; i++){
-		printf("%f ", vectorW[i]);
-	}
-	printf("\n");
-	for(i = 0; i < k; i++){
-		printf("%f ", vectorV[i]);
-	}
-	printf("\n");
-	for(i = 0; i < k; i++){
-		printf("%f ", vectorU[i]);
-	}
-	printf("\n");
-	for(i = 0; i < k; i++){
-		printf("%f ", vectorS[i]);
-	}
-	printf("\n");
-	printf("%f ", Epsilon);
-	printf("\n");
-	printf("%f ", Beta);
-	printf("\n");
-	printf("%f ", Lamdba);
-	printf("\n");
 }
 
 float generateRandomValue(float a, float b) {
