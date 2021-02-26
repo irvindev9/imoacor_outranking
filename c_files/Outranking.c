@@ -1,9 +1,9 @@
 #include "../headers/Outranking.h"
 
-float Epsilon = 0.1; // 0.05 a 0.1
-float Beta = 0.35; // 0.25 a 0.4
-float Lamdba = 0.6; // 0.55 a 0.75
-float weights[5];
+// float Epsilon = 0.1; // 0.05 a 0.1
+// float Beta = 0.35; // 0.25 a 0.4
+// float Lamdba = 0.6; // 0.55 a 0.75
+float weights[10];
 
 float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
 float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
@@ -36,18 +36,13 @@ void readData(){
 void ORankingPheromones(int size){
 	int i, j;
 
-	float concordanciaArray[T.nap][T.nap];
-	float discordanciaArray[T.nap][T.nap];
 	float sigmaArray[T.nap][T.nap];
 	float preferencesArray[T.nap][T.nap];
 	float frontierArray[T.nap][3]; // 0 = strict, 1 = weak - k, 2 = flujo neto
 
 	for(i = 0; i < T.nap; i++){	
 		for(j = 0; j < T.nap; j++){
-			concordanciaArray[i][j] = concordance(i, j);
-			discordanciaArray[i][j] = discordance(i, j);
-
-			sigmaArray[i][j] = concordanciaArray[i][j] * discordanciaArray[i][j];
+			sigmaArray[i][j] = concordance(i, j) * discordance(i, j);
 		}
 	}
 
@@ -123,8 +118,13 @@ void initValues(int dm){
 	archivo = fopen(str, "r");
 	if(archivo == NULL){
 		printf("The file %s couldn't be found... creating..\n", str);
-		// exit(-1);
 		archivo = fopen(str, "w");
+		Epsilon = generateRandomValue(0.05, 0.1);
+		Beta = generateRandomValue(0.25, 0.4);
+		Lamdba = generateRandomValue(0.55, 0.75);
+		fprintf(archivo, "%f\n", Epsilon);
+		fprintf(archivo, "%f\n", Beta);
+		fprintf(archivo, "%f\n", Lamdba);
 		// Weights
 		fprintf(archivo, "%f ", 0.05);
 		fprintf(archivo, "%f ", 0.04);
@@ -185,15 +185,24 @@ void initValues(int dm){
 		while(ptr != NULL)
 		{
 			if(contlimiter == 0){
-				vectorW[cont_in] = atof(ptr);
+				Epsilon = atof(ptr);
 			}
 			if(contlimiter == 1){
-				vectorV[cont_in] = atof(ptr);
+				Beta = atof(ptr);
 			}
 			if(contlimiter == 2){
-				vectorU[cont_in] = atof(ptr);
+				Lamdba = atof(ptr);
 			}
 			if(contlimiter == 3){
+				vectorW[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 4){
+				vectorV[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 5){
+				vectorU[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 6){
 				vectorS[cont_in] = atof(ptr);
 			}
 			ptr = strtok(NULL, delim);
@@ -205,6 +214,25 @@ void initValues(int dm){
 	for(i = 0; i < k; i++){
 		printf("%f ", vectorW[i]);
 	}
+	printf("\n");
+	for(i = 0; i < k; i++){
+		printf("%f ", vectorV[i]);
+	}
+	printf("\n");
+	for(i = 0; i < k; i++){
+		printf("%f ", vectorU[i]);
+	}
+	printf("\n");
+	for(i = 0; i < k; i++){
+		printf("%f ", vectorS[i]);
+	}
+	printf("\n");
+	printf("%f ", Epsilon);
+	printf("\n");
+	printf("%f ", Beta);
+	printf("\n");
+	printf("%f ", Lamdba);
+	printf("\n");
 }
 
 float generateRandomValue(float a, float b) {
@@ -269,10 +297,6 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 
 	boolean xPy, xIy;
 
-	// Agregar dominancia * !
-	// Encontrar por que no entra a 3 y 5 * !
-	// Calcular no dominada, debilmente, flujo neto (3, 4, 7)
-
 	if(xdominatey || ((sigma_x >= Lamdba) && (sigma_y < 0.5)) || ((sigma_x >= Lamdba) && ((0.5 <= sigma_y) && (sigma_y < Lamdba)) && (sigma_x - sigma_y >= Beta))){
 		result = 1;
 		xPy = TRUE;
@@ -326,18 +350,13 @@ boolean xdominatey(int index1, int index2){
 void ORankingAnts(int size){
 	int i, j;
 
-	float concordanciaArray[size][size];
-	float discordanciaArray[size][size];
 	float sigmaArray[size][size];
 	float preferencesArray[size][size];
 	float frontierArray[size][3];
 
 	for(i = 0; i < T.nap; i++){	
 		for(j = 0; j < T.nap; j++){
-			concordanciaArray[i][j] = concordanceAnts(i, j);
-			discordanciaArray[i][j] = discordanceAnts(i, j);
-
-			sigmaArray[i][j] = concordanciaArray[i][j] * discordanciaArray[i][j];
+			sigmaArray[i][j] = concordanceAnts(i, j) * discordanceAnts(i, j);
 		}
 	}
 

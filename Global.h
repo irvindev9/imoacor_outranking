@@ -116,5 +116,9 @@ float vectorU[100];
 float vectorS[100];
 float vectorV[100];
 
+float Epsilon; // = 0.1; // 0.05 a 0.1
+float Beta; // = 0.35; // 0.25 a 0.4
+float Lamdba; // = 0.6; // 0.55 a 0.75
+
 
 #endif
