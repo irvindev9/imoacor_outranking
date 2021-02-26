@@ -26,3 +26,11 @@ In order to execute it, you just need to type:
 $./imoacor path/to/config/file [numberOfExecutions]
 
 Examples of the configuration files are located at the directory config/
+
+_________________________________________________________
+Nueva version con Electre III / OutRanking
+Universidad Autónoma de Ciudad Júarez
+_________________________________________________________
+Ing. Irvin Raúl López Contreras
+
+This version has compiled with MinGW-W64

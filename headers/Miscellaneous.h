@@ -10,7 +10,7 @@
 #include "../Global.h"
 
 
-void saveParetoFront(int, PHEROMONE *, int);
+void saveParetoFront(int, PHEROMONE *, int, int);
 void saveParetoSet(int, PHEROMONE *, int);
 void saveParetoFrontNewFormat(int, PHEROMONE *, int);
 

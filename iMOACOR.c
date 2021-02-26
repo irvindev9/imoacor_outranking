@@ -9,7 +9,7 @@
 #include "headers/Parameter.h"
 #include "headers/AntOperations.h"
 
-void run(int);
+void run(int, int);
 
 int main(int argc, char *argv[]){
 
@@ -66,14 +66,18 @@ int main(int argc, char *argv[]){
   	// Initialize weight vectors
 	init_Weight_Vectors(WV, H, k);
 
-  	int i;
+  	int i,j;
   	// Execution of the algorithm varying the seed of the random number generator.
-  	for(i = 1; i <= executions; i++) {
-    	Rseed = (double) rand() / RAND_MAX;
-    	randomize(Rseed);
-    	run(i);
-    	printf("Execution %d of %s in %dD is done!\n", i, Fname, k);
- 	 }
+	int dm = 10; // 10 desition makers
+
+	for(j = 1; j <= dm; j++){
+		for(i = 1; i <= executions; i++) {
+			Rseed = (double) rand() / RAND_MAX;
+			randomize(Rseed);
+			run(i, j);
+			printf("Execution dm:%d, exec:%d of %s in %dD is done!\n", j, i, Fname, k);
+		}
+	}
 
  	if(strncmp(Fname, "WFG", 3) == 0)
  		free_WFG();
@@ -82,7 +86,7 @@ int main(int argc, char *argv[]){
 	return 1;
 }
 
-void run(int exec){;
+void run(int exec, int dm){;
 	genCounter = 0;
 	// Generate randomly initial solutions
 	initPheromones();
@@ -94,7 +98,7 @@ void run(int exec){;
 	normalizeObjFuncs(MAX_ARCHIVE_SIZE, _PHE_TYPE_);	
 	// Apply R2ranking to the pheromones
 	// R2rankingPheromones();
-	initValues(1);
+	initValues(dm);
 	readVars();
 	
 	int size;	
@@ -113,6 +117,6 @@ void run(int exec){;
 	}
 
 	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);
-	saveParetoFront(exec, T.pheromones, T.nap);
-	saveParetoSet(exec, T.pheromones, T.nap);
+	saveParetoFront(exec, T.pheromones, T.nap, dm);
+	// saveParetoSet(exec, T.pheromones, T.nap);
 }

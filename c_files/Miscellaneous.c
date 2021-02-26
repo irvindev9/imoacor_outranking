@@ -46,10 +46,10 @@ void saveDistroWeightsPheromones(int *niche, int gen, int exec){
 }
 
 
-void saveParetoFront(int exec, PHEROMONE *pheromones, int size){
+void saveParetoFront(int exec, PHEROMONE *pheromones, int size, int dm){
 	FILE *arch;
 	char str[100];
-	sprintf(str, "output/iMOACOR_%s_%dD_R%d.pof", Fname, k, exec);
+	sprintf(str, "output/DM%d_%s_%dD_R%d.pof", dm, Fname, k, exec);
 	arch = fopen(str, "w");
 	if(arch == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
@@ -61,7 +61,7 @@ void saveParetoFront(int exec, PHEROMONE *pheromones, int size){
 		for(j = 0; j < k; j++){
 			fprintf(arch, "%.6e", pheromones[i].Fx[j]);
 			if(j != k - 1)
-				fprintf(arch, "\t");
+				fprintf(arch, " ");
 		}
 		fprintf(arch, "\n");
 	}
@@ -74,7 +74,7 @@ void saveParetoFrontNewFormat(int exec, PHEROMONE *pheromones, int size){
 
 	FILE *archivo;
 	char str[100];
-	sprintf(str, "output/%s-DM0%d-ALG-1-VAR-1-SEL-2-EXP-%d.txt", Fname, dm_num, run_exec);
+	sprintf(str, "output/global%s.txt", Fname);
 	archivo = fopen(str, "a");
 	if(archivo == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
@@ -83,22 +83,11 @@ void saveParetoFrontNewFormat(int exec, PHEROMONE *pheromones, int size){
 
 	int  i, j;
 	for(i = 0; i < size; i++){	
-		fprintf(archivo, "[ ");
-		for(j = 0; j < n; j++){
-			fprintf(archivo, "%f", pheromones[i].x[j]);
-			if(j != n - 1)
-				fprintf(archivo, " ");
-		}
-		fprintf(archivo, " ] [ ");
-		float eudist = 0;
 		for(j = 0; j < k; j++){
 			fprintf(archivo, "%.6e", pheromones[i].Fx[j]);
 			if(j != k - 1)
 				fprintf(archivo, " ");
 		}
-		eudist = sqrt(eudist);
-		
-		fprintf(archivo, " ] [ ] # 0 # 0 - ");
 		fprintf(archivo, "\n");
 	}
 	fclose(archivo);
