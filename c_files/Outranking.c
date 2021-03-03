@@ -144,6 +144,7 @@ void initValues(int dm){
 	char str[100];
 	sprintf(str, "output/DM%d_config.txt", dm);
 	archivo = fopen(str, "r");
+	float tempweight = 0;
 	if(archivo == NULL){
 		printf("The file %s couldn't be found... creating..\n", str);
 		archivo = fopen(str, "w");
@@ -154,16 +155,33 @@ void initValues(int dm){
 		fprintf(archivo, "%f\n", Beta);
 		fprintf(archivo, "%f\n", Lamdba);
 		// Weights
-		fprintf(archivo, "%f ", 0.05);
-		fprintf(archivo, "%f ", 0.04);
-		fprintf(archivo, "%f ", 0.01);
-		fprintf(archivo, "%f ", 0.2);
-		fprintf(archivo, "%f ", 0.05);
-		fprintf(archivo, "%f ", 0.05);
-		fprintf(archivo, "%f ", 0.01);
-		fprintf(archivo, "%f ", 0.09);
-		fprintf(archivo, "%f ", 0.35);
-		fprintf(archivo, "%f\n", 0.15);
+		// fprintf(archivo, "%f ", 0.05);
+		// fprintf(archivo, "%f ", 0.04);
+		// fprintf(archivo, "%f ", 0.01);
+		// fprintf(archivo, "%f ", 0.2);
+		// fprintf(archivo, "%f ", 0.05);
+		// fprintf(archivo, "%f ", 0.05);
+		// fprintf(archivo, "%f ", 0.01);
+		// fprintf(archivo, "%f ", 0.09);
+		// fprintf(archivo, "%f ", 0.35);
+		// fprintf(archivo, "%f\n", 0.15);
+
+		for(i = 0;i < k; i++){
+			if(tempweight == 0){
+				float value = generateRandomValue(0.0, 0.20);
+				tempweight = 0.2 - value;
+				fprintf(archivo, "%f", value);
+			}else{
+				fprintf(archivo, "%f", tempweight);
+				tempweight = 0;
+			}
+			
+			if(i == (k-1)){
+				fprintf(archivo, "\n");
+			}else{
+				fprintf(archivo, " ");
+			}
+		}
 
 		float vetoArray[k];
 		float indiferenciaArray[k];
@@ -493,4 +511,127 @@ boolean xdominateyAnts(int index1, int index2){
 	}else{
 		return FALSE;
 	}
+}
+
+
+void outrankingFromFile(){
+
+	initValues(1);
+
+	FILE *arch;
+	arch = fopen("output/globaldeprueba.txt", "r");
+	// arch = fopen("output/Globalwithoutduplicates.txt", "r");
+	if(arch == NULL){
+		printf("Error! The file couldn't be created\n");
+		exit(-1);
+	}
+	char line[5000];
+	int contlimiter = 0;
+	
+
+	int max_file_size = 200000;
+
+	float weights[k];
+	float weights2[k];
+	float sigmaArray[max_file_size][max_file_size];
+	float preferencesArray[max_file_size][max_file_size];
+	float frontierArray[max_file_size][3];
+	int i, j;
+	int size_of_file = 0;
+
+	while( fgets(line,5000,arch) ) {
+		int init_size = strlen(line);
+		char delim[] = " ";
+		char *ptr = strtok(line, delim);
+		int cont_in = 0;
+		while(ptr != NULL)
+		{
+			float val = atof(ptr);
+			weights[cont_in] = val;
+
+			printf("val = %f \n",val);
+			ptr = strtok(NULL, delim);
+			cont_in++;
+		}
+
+		FILE *arch2;
+		arch2 = fopen("output/globaldeprueba.txt", "r");
+		// arch2 = fopen("output/Globalwithoutduplicates.txt", "r");
+		if(arch2 == NULL){
+			printf("Error! The file couldn't be created\n");
+			exit(-1);
+		}
+		char line2[5000];
+		int contlimiter2 = 0;
+
+		while( fgets(line2,5000,arch2) ) {
+			int init_size2 = strlen(line2);
+			char delim2[] = " ";
+			char *ptr2 = strtok(line2, delim2);
+			int cont_in2 = 0;
+			while(ptr2 != NULL){
+				float val2 = atof(ptr2);
+				weights2[cont_in2] = val2;
+
+				printf("val2 %d %d = %f \n", cont_in2, contlimiter2, val2);
+				ptr2 = strtok(NULL, delim2);
+				cont_in2++;
+			}
+			float concordanse = 0;
+			int ic;
+
+			for(ic = 0; ic < k; ic++){
+				boolean xIky;
+				boolean xPky;
+
+				xIky = abs(weights[ic] - weights2[ic]) <= vectorU[ic];
+
+				xPky = weights[ic] < weights2[ic] && !(xIky);
+
+				if(xPky || xIky){
+					concordanse += vectorW[ic];
+				}
+			}
+
+			float min_value = 1;
+			int id;
+
+			for(id = 0;id < k;id++){
+				float discordanse = 0;
+
+				float dis = weights[id] - weights2[id];
+
+				if(dis < vectorS[id]){
+					discordanse = 0;
+				}
+				if((vectorS[id] <= dis) && (dis < vectorV[id])){
+					discordanse = (dis - vectorU[i]) / (vectorV[id] - vectorU[id]);
+				}
+				if(dis >= vectorV[id]){
+					discordanse = 1;
+				}
+
+				if((1 - discordanse) < min_value){
+					min_value = 1 - discordanse;
+				}
+			}
+
+			// sigmaArray[contlimiter][contlimiter2] = concordanse * min_value;
+			// sigmaArray[contlimiter][contlimiter2] = 1.1;
+			// printf("val1 = %f ",min_value);
+			// printf("val2 = %f \n",concordanse);
+			contlimiter2++;
+		}
+
+		// contlimiter++;
+		size_of_file++;
+	}
+
+	fclose(arch);
+
+	// for(i = 0; i < size_of_file; i++){
+	// 	for(j = 0; j < size_of_file; j++){
+	// 		printf("sigma: %f \n", sigmaArray[i][j]);
+	// 	}
+	// }
 }
