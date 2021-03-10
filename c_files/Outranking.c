@@ -564,18 +564,18 @@ void outrankingFromFile(){
 
 	printf("Saved finished!!! \nContinue with outranking...\n");
 
-	for(i = 0; i < size_of_file; i++){	
-		for(j = 0; j < size_of_file; j++){
-			T.pheromones[i].sigma[j] = concordance(i, j) * discordance(i, j);
-		}
-	}
+	// for(i = 0; i < size_of_file; i++){	
+	// 	for(j = 0; j < size_of_file; j++){
+	// 		T.pheromones[i].sigma[j] = concordance(i, j) * discordance(i, j);
+	// 	}
+	// }
 
-	printf("Sigma finished!!! \nContinue with outranking...\n");
+	// printf("Sigma finished!!! \nContinue with outranking...\n");
 
 	for(i = 0; i < size_of_file; i++){
 		T.pheromones[i].netscore = 0;
 		for(j = 0; j < size_of_file; j++){
-			T.pheromones[i].netscore += (T.pheromones[i].sigma[j] - T.pheromones[j].sigma[i]);
+			T.pheromones[i].netscore += ((concordance(i, j) * discordance(i, j)) - (concordance(j, i) * discordance(j, i)));
 		}
 	}
 
@@ -593,7 +593,7 @@ void outrankingFromFile(){
 		T.pheromones[i].frontier[2] = 0;
 		for(j = 0; j < size_of_file; j++){
 			if(i != j){
-				preference = preferenceIdentifier(T.pheromones[i].sigma[j], T.pheromones[j].sigma[i], xdominatey(i, j));
+				preference = preferenceIdentifier((concordance(i, j) * discordance(i, j)), (concordance(j, i) * discordance(j, i)), xdominatey(i, j));
 
 				// Estrictamente dominada
 				if(preference == 1){

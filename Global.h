@@ -45,7 +45,7 @@ typedef struct PHEROMONE{
 	int weakOR;				/* OutRanking weak or k-preference value. */
 	int netscoreOR;			/* OutRanking netscore value. */
 	float netscore;			/* OutRanking netscore value. */
-	float *sigma;			/* OutRanking sigma value. */
+	// float *sigma;			/* OutRanking sigma value. */
 	float *preference;			/* OutRanking preference value. */
 	float *frontier;			/* OutRanking frontier value. */
 	double mmf;					/* Maximin fitness value */
