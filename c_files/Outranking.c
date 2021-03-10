@@ -525,112 +525,114 @@ boolean xdominateyAnts(int index1, int index2){
 
 void outrankingFromFile(){
 
-	int dmfile = 1;
+	int dmfile = 2;
 
-	initValues(dmfile);
+	for(dmfile = 2; dmfile <= 10; dmfile++){
+		initValues(dmfile);
 
-	FILE *arch;
-	// arch = fopen("output/globaldeprueba.txt", "r");
-	arch = fopen("output/Globalwithoutduplicates.txt", "r");
-	if(arch == NULL){
-		printf("Error! The file couldn't be created\n");
-		exit(-1);
-	}
-	char line[5000];
-	int contlimiter = 0;
-
-	int i, j;
-	int size_of_file = 0;
-
-	while( fgets(line,5000,arch) ) {
-		int init_size = strlen(line);
-		char delim[] = " ";
-		char *ptr = strtok(line, delim);
-		int cont_in = 0;
-		while(ptr != NULL)
-		{
-			float val = atof(ptr);
-			T.pheromones[size_of_file].nFx[cont_in] = val;
-
-			ptr = strtok(NULL, delim);
-			cont_in++;
+		FILE *arch;
+		// arch = fopen("output/globaldeprueba.txt", "r");
+		arch = fopen("output/Globalwithoutduplicates.txt", "r");
+		if(arch == NULL){
+			printf("Error! The file couldn't be created\n");
+			exit(-1);
 		}
-		size_of_file++;
-	}
+		char line[5000];
+		int contlimiter = 0;
 
-	printf("Size: %d...\n", size_of_file);
+		int i, j;
+		int size_of_file = 0;
 
-	fclose(arch);
+		while( fgets(line,5000,arch) ) {
+			int init_size = strlen(line);
+			char delim[] = " ";
+			char *ptr = strtok(line, delim);
+			int cont_in = 0;
+			while(ptr != NULL)
+			{
+				float val = atof(ptr);
+				T.pheromones[size_of_file].nFx[cont_in] = val;
 
-	printf("Saved finished!!! \nContinue with outranking...\n");
-
-	// for(i = 0; i < size_of_file; i++){	
-	// 	for(j = 0; j < size_of_file; j++){
-	// 		T.pheromones[i].sigma[j] = concordance(i, j) * discordance(i, j);
-	// 	}
-	// }
-
-	// printf("Sigma finished!!! \nContinue with outranking...\n");
-
-	for(i = 0; i < size_of_file; i++){
-		T.pheromones[i].netscore = 0;
-		for(j = 0; j < size_of_file; j++){
-			T.pheromones[i].netscore += ((concordance(i, j) * discordance(i, j)) - (concordance(j, i) * discordance(j, i)));
+				ptr = strtok(NULL, delim);
+				cont_in++;
+			}
+			size_of_file++;
 		}
-	}
 
-	// for(i = 0; i < size_of_file; i++){
-	// 	free(T.pheromones[i].nFx);
-	// }
+		printf("Size: %d...\n", size_of_file);
 
-	printf("Netscore finished!!! \nContinue with outranking...\n");
+		fclose(arch);
 
-	float preference;
+		printf("Saved finished!!! \nContinue with outranking...\n");
 
-	for(i = 0; i < size_of_file; i++){	
-		T.pheromones[i].frontier[0] = 0;
-		T.pheromones[i].frontier[1] = 0;
-		T.pheromones[i].frontier[2] = 0;
-		for(j = 0; j < size_of_file; j++){
-			if(i != j){
-				preference = preferenceIdentifier((concordance(i, j) * discordance(i, j)), (concordance(j, i) * discordance(j, i)), xdominatey(i, j));
+		// for(i = 0; i < size_of_file; i++){	
+		// 	for(j = 0; j < size_of_file; j++){
+		// 		T.pheromones[i].sigma[j] = concordance(i, j) * discordance(i, j);
+		// 	}
+		// }
 
-				// Estrictamente dominada
-				if(preference == 1){
-					T.pheromones[i].frontier[0] += 1;
-				}
+		// printf("Sigma finished!!! \nContinue with outranking...\n");
 
-				// Debilmente dominadas / k-preferencia
-				if(preference == 3 || preference == 5){
-					T.pheromones[i].frontier[1] += 1;
-				}
-
-				//Flujo neto
-				if(T.pheromones[j].netscore > T.pheromones[i].netscore){
-					T.pheromones[i].frontier[2] += 1;
-				}
-				
-			}else{
-				preference = 0;
+		for(i = 0; i < size_of_file; i++){
+			T.pheromones[i].netscore = 0;
+			for(j = 0; j < size_of_file; j++){
+				T.pheromones[i].netscore += ((concordance(i, j) * discordance(i, j)) - (concordance(j, i) * discordance(j, i)));
 			}
 		}
 
+		// for(i = 0; i < size_of_file; i++){
+		// 	free(T.pheromones[i].nFx);
+		// }
+
+		printf("Netscore finished!!! \nContinue with outranking...\n");
+
+		float preference;
+
+		for(i = 0; i < size_of_file; i++){	
+			T.pheromones[i].frontier[0] = 0;
+			T.pheromones[i].frontier[1] = 0;
+			T.pheromones[i].frontier[2] = 0;
+			for(j = 0; j < size_of_file; j++){
+				if(i != j){
+					preference = preferenceIdentifier((concordance(i, j) * discordance(i, j)), (concordance(j, i) * discordance(j, i)), xdominatey(i, j));
+
+					// Estrictamente dominada
+					if(preference == 1){
+						T.pheromones[i].frontier[0] += 1;
+					}
+
+					// Debilmente dominadas / k-preferencia
+					if(preference == 3 || preference == 5){
+						T.pheromones[i].frontier[1] += 1;
+					}
+
+					//Flujo neto
+					if(T.pheromones[j].netscore > T.pheromones[i].netscore){
+						T.pheromones[i].frontier[2] += 1;
+					}
+					
+				}else{
+					preference = 0;
+				}
+			}
+
+		}
+
+		printf("Preference finished!!! \nContinue with printing results...\n");
+
+		FILE *outresults;
+		char str[100];
+		sprintf(str, "output/GlobalResults_%s_%dD_DM%d.txt", Fname, k, dmfile);
+		outresults = fopen(str, "w");
+		if(outresults == NULL){
+			printf("Error! The file %s couldn't be created\n", str);
+			exit(-1);
+		}
+
+		for(i = 0; i < size_of_file; i++){
+			fprintf(outresults, "(%d, %d, %d) \n", (int)T.pheromones[i].frontier[0], (int)T.pheromones[i].frontier[1], (int)T.pheromones[i].frontier[2]);
+		}
+
+		fclose(outresults);
 	}
-
-	printf("Preference finished!!! \nContinue with printing results...\n");
-
-	FILE *outresults;
-	char str[100];
-	sprintf(str, "output/GlobalResults_%s_%dD_DM%d.txt", Fname, k, dmfile);
-	outresults = fopen(str, "w");
-	if(outresults == NULL){
-		printf("Error! The file %s couldn't be created\n", str);
-		exit(-1);
-	}
-
-	for(i = 0; i < size_of_file; i++){
-		fprintf(outresults, "(%d, %d, %d) \n", (int)T.pheromones[i].frontier[0], (int)T.pheromones[i].frontier[1], (int)T.pheromones[i].frontier[2]);
-	}
-
-	fclose(outresults);
 }
