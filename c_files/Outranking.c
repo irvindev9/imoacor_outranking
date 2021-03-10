@@ -583,6 +583,7 @@ void outrankingFromFile(){
 
 	printf("Netscore finished!!! \nContinue with outranking...\n");
 
+	printf("Checkpoint 0.1!!! \n");
 	float preference;
 	printf("Checkpoint 0!!! \n");
 
