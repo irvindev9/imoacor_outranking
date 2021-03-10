@@ -577,9 +577,9 @@ void outrankingFromFile(){
 		}
 	}
 
-	for(i = 0; i < size_of_file; i++){
-		free(T.pheromones[i].nFx);
-	}
+	// for(i = 0; i < size_of_file; i++){
+	// 	free(T.pheromones[i].nFx);
+	// }
 
 	printf("Netscore finished!!! \nContinue with outranking...\n");
 
