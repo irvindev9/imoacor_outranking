@@ -584,13 +584,17 @@ void outrankingFromFile(){
 	printf("Netscore finished!!! \nContinue with outranking...\n");
 
 	float preference;
+	printf("Checkpoint 0!!! \n");
 
 	for(i = 0; i < size_of_file; i++){	
+		printf("Checkpoint 1!!! \n");
 		T.pheromones[i].frontier[0] = 0;
 		T.pheromones[i].frontier[1] = 0;
 		T.pheromones[i].frontier[2] = 0;
 		for(j = 0; j < size_of_file; j++){
+			printf("Checkpoint 2!!! \n");
 			if(i != j){
+				printf("Checkpoint 3!!! \n");
 				preference = preferenceIdentifier(T.pheromones[i].sigma[j], T.pheromones[j].sigma[i], xdominatey(i, j));
 
 				// Estrictamente dominada
@@ -609,6 +613,7 @@ void outrankingFromFile(){
 				}
 				
 			}else{
+				printf("Checkpoint 4!!! \n");
 				preference = 0;
 			}
 		}
