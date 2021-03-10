@@ -35,8 +35,8 @@ void allocate_Memory(){
 	}
 
 	for(i = 0; i < DATA_Size; i++){
-		// T.pheromones[i].x = (double *)calloc(n, sizeof(double));
-		// T.pheromones[i].Fx = (double *)calloc(k, sizeof(double));
+		T.pheromones[i].x = (double *)calloc(n, sizeof(double));
+		T.pheromones[i].Fx = (double *)calloc(k, sizeof(double));
 		T.pheromones[i].nFx = (double *)calloc(k, sizeof(double));
 		T.pheromones[i].sigma = (double *)calloc(DATA_Size, sizeof(double));
 		T.pheromones[i].frontier = (double *)calloc(3, sizeof(double));
