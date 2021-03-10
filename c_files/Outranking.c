@@ -525,11 +525,13 @@ boolean xdominateyAnts(int index1, int index2){
 
 void outrankingFromFile(){
 
-	initValues(1);
+	int dmfile = 1;
+
+	initValues(dmfile);
 
 	FILE *arch;
-	arch = fopen("output/globaldeprueba.txt", "r");
-	// arch = fopen("output/Globalwithoutduplicates.txt", "r");
+	// arch = fopen("output/globaldeprueba.txt", "r");
+	arch = fopen("output/Globalwithoutduplicates.txt", "r");
 	if(arch == NULL){
 		printf("Error! The file couldn't be created\n");
 		exit(-1);
@@ -619,7 +621,7 @@ void outrankingFromFile(){
 
 	FILE *outresults;
 	char str[100];
-	sprintf(str, "output/GlobalResults_%s_%dD.txt", Fname, k);
+	sprintf(str, "output/GlobalResults_%s_%dD_DM%d.txt", Fname, k, dmfile);
 	outresults = fopen(str, "w");
 	if(outresults == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
