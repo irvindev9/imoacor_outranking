@@ -13,8 +13,7 @@ void run(int, int);
 
 int main(int argc, char *argv[]){
 
-	outrankingFromFile();
-	exit(1);
+	
 
 	if(argc != 2 && argc != 3) {
 		printf("Syntax: ./imoacor parameter_file_name [#runs]\n");
@@ -50,7 +49,12 @@ int main(int argc, char *argv[]){
 	getInt("H", &H);
 	N = choose(H + k - 1, k - 1);
 
-	MAX_ARCHIVE_SIZE = M = N;
+	// MAX_ARCHIVE_SIZE = M = N;
+	MAX_ARCHIVE_SIZE = M = 1;
+	// DATA_Size = 72445;
+	DATA_Size = 10000;
+
+	
 
 	// Allocate memory for all the structures
 	allocate_Memory();
@@ -68,6 +72,12 @@ int main(int argc, char *argv[]){
 
   	// Initialize weight vectors
 	init_Weight_Vectors(WV, H, k);
+
+	
+	outrankingFromFile();
+	free_param();
+	free_Memory();
+	exit(1);
 
   	int i,j;
   	// Execution of the algorithm varying the seed of the random number generator.

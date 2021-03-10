@@ -44,11 +44,22 @@ typedef struct PHEROMONE{
 	int strictOR;			/* OutRanking Strict value. */
 	int weakOR;				/* OutRanking weak or k-preference value. */
 	int netscoreOR;			/* OutRanking netscore value. */
+	float netscore;			/* OutRanking netscore value. */
+	float *sigma;			/* OutRanking sigma value. */
+	float *preference;			/* OutRanking preference value. */
+	float *frontier;			/* OutRanking frontier value. */
 	double mmf;					/* Maximin fitness value */
 	int rank;					/* Rank associated by the R2 ranking algorithm */
 	int rankOR;					/* Rank associated by the Outranking algorithm */
 	int weight_index;
 }PHEROMONE;
+
+typedef struct DATA{
+	double *nFx; 				/* Normalized objective vector */
+	float netscore;			/* OutRanking netscore value. */
+	float *sigma;			/* OutRanking sigma value. */
+	float *frontier;			/* OutRanking frontier value. */
+}DATA;
 
 typedef struct ARCHIVE{
 	PHEROMONE *pheromones;		/* Pheromones */
@@ -58,6 +69,9 @@ typedef struct ARCHIVE{
 	int nap; 					/* Number of active pheromones */ // k
 }ARCHIVE;
 
+typedef struct WEIGHT_S{
+	float *weight_val;					/* Vector of weights variables */
+}WEIGHT_S;
 
 
 
@@ -71,6 +85,7 @@ int n;							/* Dimension of the decision space - USER PARAMETER */
 int k;							/* Dimension of the objective space - USER PARAMETER */
 int k_wfg;						/* Variable used by WFG functions - USER PARAMETER*/
 int MAX_ARCHIVE_SIZE;	 		/* Maximum size of the archive of solutions - USER PARAMETER */
+int DATA_Size;	 		/* Maximum size of the archive of solutions - USER PARAMETER */
 int N; 							/* Number of weight vectors */
 int M;							/* Number of ants - USER PARAMETER*/
 int H;							/* Parameter used to calculte the number of weight vectors - USER PARAMETER */		

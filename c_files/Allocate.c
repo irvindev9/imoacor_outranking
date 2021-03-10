@@ -5,7 +5,7 @@ void allocate_Memory(){
 	
 	Ants = (ANT *)malloc((M + MAX_ARCHIVE_SIZE)*sizeof(ANT));
 	WV = (WEIGHT *)malloc(N*sizeof(WEIGHT));
-	T.pheromones = (PHEROMONE *)malloc(MAX_ARCHIVE_SIZE*sizeof(PHEROMONE));
+	T.pheromones = (PHEROMONE *)malloc(DATA_Size*sizeof(PHEROMONE));
 	T.w = (double *)calloc(MAX_ARCHIVE_SIZE, sizeof(double));
 	T.p = (double *)calloc(MAX_ARCHIVE_SIZE, sizeof(double));
 	T.stdDev = (double *)calloc(MAX_ARCHIVE_SIZE, sizeof(double));
@@ -34,10 +34,12 @@ void allocate_Memory(){
 		Initialize(WV[i].Elements);
 	}
 
-	for(i = 0; i < MAX_ARCHIVE_SIZE; i++){
-		T.pheromones[i].x = (double *)calloc(n, sizeof(double));
-		T.pheromones[i].Fx = (double *)calloc(k, sizeof(double));
+	for(i = 0; i < DATA_Size; i++){
+		// T.pheromones[i].x = (double *)calloc(n, sizeof(double));
+		// T.pheromones[i].Fx = (double *)calloc(k, sizeof(double));
 		T.pheromones[i].nFx = (double *)calloc(k, sizeof(double));
+		T.pheromones[i].sigma = (double *)calloc(DATA_Size, sizeof(double));
+		T.pheromones[i].frontier = (double *)calloc(3, sizeof(double));
 	}
 }
 

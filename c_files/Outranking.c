@@ -232,29 +232,38 @@ void initValues(int dm){
 		{
 			if(contlimiter == 0){
 				Epsilon = atof(ptr);
+				printf("%f", Epsilon);
 			}
 			if(contlimiter == 1){
 				Beta = atof(ptr);
+				printf("%f", Beta);
 			}
 			if(contlimiter == 2){
 				Lamdba = atof(ptr);
+				printf("%f", Lamdba);
 			}
 			if(contlimiter == 3){
 				vectorW[cont_in] = atof(ptr);
+				printf("%f ", vectorW[cont_in]);
 			}
 			if(contlimiter == 4){
 				vectorV[cont_in] = atof(ptr);
+				printf("%f ", vectorV[cont_in]);
 			}
 			if(contlimiter == 5){
 				vectorU[cont_in] = atof(ptr);
+				printf("%f ", vectorU[cont_in]);
 			}
 			if(contlimiter == 6){
 				vectorS[cont_in] = atof(ptr);
+				printf("%f ", vectorS[cont_in]);
 			}
+			
 			ptr = strtok(NULL, delim);
 			cont_in++;
 		}
 		contlimiter++;
+		printf("\n");
 	}
 }
 
@@ -274,7 +283,7 @@ float concordance(int index1, int index2){
 		boolean xIky;
 		boolean xPky;
 
-		xIky = abs(T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i]) <= vectorU[i];
+		xIky = fabs(T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i]) <= vectorU[i];
 
 		xPky = T.pheromones[index1].nFx[i] < T.pheromones[index2].nFx[i] && !(xIky);
 
@@ -327,7 +336,7 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 		xPy = FALSE;
 	}
 
-	if((sigma_x >= Lamdba) && (sigma_y >= Lamdba) && (abs(sigma_x - sigma_y) <= Epsilon)){
+	if((sigma_x >= Lamdba) && (sigma_y >= Lamdba) && (fabs(sigma_x - sigma_y) <= Epsilon)){
 		result = 2;
 		xIy = TRUE;
 	}else{
@@ -453,7 +462,7 @@ float concordanceAnts(int index1, int index2){
 		boolean xIky;
 		boolean xPky;
 
-		xIky = abs(Ants[index1].nFx[i] - Ants[index2].nFx[i]) <= vectorU[i];
+		xIky = fabs(Ants[index1].nFx[i] - Ants[index2].nFx[i]) <= vectorU[i];
 
 		xPky = Ants[index1].nFx[i] < Ants[index2].nFx[i] && !(xIky);
 
@@ -527,15 +536,7 @@ void outrankingFromFile(){
 	}
 	char line[5000];
 	int contlimiter = 0;
-	
 
-	int max_file_size = 200000;
-
-	float weights[k];
-	float weights2[k];
-	float sigmaArray[max_file_size][max_file_size];
-	float preferencesArray[max_file_size][max_file_size];
-	float frontierArray[max_file_size][3];
 	int i, j;
 	int size_of_file = 0;
 
@@ -547,91 +548,87 @@ void outrankingFromFile(){
 		while(ptr != NULL)
 		{
 			float val = atof(ptr);
-			weights[cont_in] = val;
+			T.pheromones[size_of_file].nFx[cont_in] = val;
 
-			printf("val = %f \n",val);
 			ptr = strtok(NULL, delim);
 			cont_in++;
 		}
-
-		FILE *arch2;
-		arch2 = fopen("output/globaldeprueba.txt", "r");
-		// arch2 = fopen("output/Globalwithoutduplicates.txt", "r");
-		if(arch2 == NULL){
-			printf("Error! The file couldn't be created\n");
-			exit(-1);
-		}
-		char line2[5000];
-		int contlimiter2 = 0;
-
-		while( fgets(line2,5000,arch2) ) {
-			int init_size2 = strlen(line2);
-			char delim2[] = " ";
-			char *ptr2 = strtok(line2, delim2);
-			int cont_in2 = 0;
-			while(ptr2 != NULL){
-				float val2 = atof(ptr2);
-				weights2[cont_in2] = val2;
-
-				printf("val2 %d %d = %f \n", cont_in2, contlimiter2, val2);
-				ptr2 = strtok(NULL, delim2);
-				cont_in2++;
-			}
-			float concordanse = 0;
-			int ic;
-
-			for(ic = 0; ic < k; ic++){
-				boolean xIky;
-				boolean xPky;
-
-				xIky = abs(weights[ic] - weights2[ic]) <= vectorU[ic];
-
-				xPky = weights[ic] < weights2[ic] && !(xIky);
-
-				if(xPky || xIky){
-					concordanse += vectorW[ic];
-				}
-			}
-
-			float min_value = 1;
-			int id;
-
-			for(id = 0;id < k;id++){
-				float discordanse = 0;
-
-				float dis = weights[id] - weights2[id];
-
-				if(dis < vectorS[id]){
-					discordanse = 0;
-				}
-				if((vectorS[id] <= dis) && (dis < vectorV[id])){
-					discordanse = (dis - vectorU[i]) / (vectorV[id] - vectorU[id]);
-				}
-				if(dis >= vectorV[id]){
-					discordanse = 1;
-				}
-
-				if((1 - discordanse) < min_value){
-					min_value = 1 - discordanse;
-				}
-			}
-
-			// sigmaArray[contlimiter][contlimiter2] = concordanse * min_value;
-			// sigmaArray[contlimiter][contlimiter2] = 1.1;
-			// printf("val1 = %f ",min_value);
-			// printf("val2 = %f \n",concordanse);
-			contlimiter2++;
-		}
-
-		// contlimiter++;
 		size_of_file++;
 	}
 
+	printf("Size: %d...\n", size_of_file);
+
 	fclose(arch);
 
-	// for(i = 0; i < size_of_file; i++){
-	// 	for(j = 0; j < size_of_file; j++){
-	// 		printf("sigma: %f \n", sigmaArray[i][j]);
-	// 	}
-	// }
+	printf("Saved finished!!! \nContinue with outranking...\n");
+
+	for(i = 0; i < size_of_file; i++){	
+		for(j = 0; j < size_of_file; j++){
+			T.pheromones[i].sigma[j] = concordance(i, j) * discordance(i, j);
+		}
+	}
+
+	printf("Sigma finished!!! \nContinue with outranking...\n");
+
+	for(i = 0; i < size_of_file; i++){
+		T.pheromones[i].netscore = 0;
+		for(j = 0; j < size_of_file; j++){
+			T.pheromones[i].netscore += (T.pheromones[i].sigma[j] - T.pheromones[j].sigma[i]);
+		}
+	}
+
+	for(i = 0; i < size_of_file; i++){
+		free(T.pheromones[i].nFx);
+	}
+
+	printf("Netscore finished!!! \nContinue with outranking...\n");
+
+	float preference;
+
+	for(i = 0; i < size_of_file; i++){	
+		T.pheromones[i].frontier[0] = 0;
+		T.pheromones[i].frontier[1] = 0;
+		T.pheromones[i].frontier[2] = 0;
+		for(j = 0; j < size_of_file; j++){
+			if(i != j){
+				preference = preferenceIdentifier(T.pheromones[i].sigma[j], T.pheromones[j].sigma[i], xdominatey(i, j));
+
+				// Estrictamente dominada
+				if(preference == 1){
+					T.pheromones[i].frontier[0] += 1;
+				}
+
+				// Debilmente dominadas / k-preferencia
+				if(preference == 3 || preference == 5){
+					T.pheromones[i].frontier[1] += 1;
+				}
+
+				//Flujo neto
+				if(T.pheromones[j].netscore > T.pheromones[i].netscore){
+					T.pheromones[i].frontier[2] += 1;
+				}
+				
+			}else{
+				preference = 0;
+			}
+		}
+
+	}
+
+	printf("Preference finished!!! \nContinue with printing results...\n");
+
+	FILE *outresults;
+	char str[100];
+	sprintf(str, "output/GlobalResults_%s_%dD.txt", Fname, k);
+	outresults = fopen(str, "w");
+	if(outresults == NULL){
+		printf("Error! The file %s couldn't be created\n", str);
+		exit(-1);
+	}
+
+	for(i = 0; i < size_of_file; i++){
+		fprintf(outresults, "(%d, %d, %d) \n", (int)T.pheromones[i].frontier[0], (int)T.pheromones[i].frontier[1], (int)T.pheromones[i].frontier[2]);
+	}
+
+	fclose(outresults);
 }

@@ -97,7 +97,7 @@ void saveParetoFrontNewFormat(int exec, PHEROMONE *pheromones, int size){
 void saveParetoSet(int exec, PHEROMONE *pheromones, int size){
 	FILE *arch;
 	char str[100];
-	sprintf(str, "output/iMOACOR_%s_%dD_R%d.pos", Fname, k, exec);
+	sprintf(str, "output/original_iMOACOR_%s_%dD_R%d.pos", Fname, k, exec);
 	arch = fopen(str, "w");
 	if(arch == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
