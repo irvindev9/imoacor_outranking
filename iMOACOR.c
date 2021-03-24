@@ -13,8 +13,8 @@ void run(int, int);
 
 int main(int argc, char *argv[]){
 
-	outrankingFromFile();
-	exit(1);
+	// outrankingFromFile();
+	// exit(1);
 
 	if(argc != 2 && argc != 3) {
 		printf("Syntax: ./imoacor parameter_file_name [#runs]\n");

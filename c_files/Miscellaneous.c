@@ -49,7 +49,7 @@ void saveDistroWeightsPheromones(int *niche, int gen, int exec){
 void saveParetoFront(int exec, PHEROMONE *pheromones, int size, int dm){
 	FILE *arch;
 	char str[100];
-	sprintf(str, "output/original_DM%d_%s_%dD_R%d.pof", dm, Fname, k, exec);
+	sprintf(str, "output/DM%d_%s_%dD_R%d.pof", dm, Fname, k, exec);
 	arch = fopen(str, "w");
 	if(arch == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
