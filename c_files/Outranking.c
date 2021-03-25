@@ -142,7 +142,7 @@ void initValues(int dm){
 
 	FILE *archivo;
 	char str[100];
-	sprintf(str, "output/DM%d_config.txt", dm);
+	sprintf(str, "output/DM%d_%s_config.txt", dm, Fname);
 	archivo = fopen(str, "r");
 	float tempweight = 0;
 	if(archivo == NULL){
