@@ -5,6 +5,7 @@
 #include "headers/Rand.h"
 #include "headers/MOMBI.h"
 #include "headers/Outranking.h"
+#include "headers/Intervals.h"
 #include "headers/WFG.h"
 #include "headers/Parameter.h"
 #include "headers/AntOperations.h"
@@ -12,6 +13,10 @@
 void run(int);
 
 int main(int argc, char *argv[]){
+
+	initializeIntervals();
+	free_Memory();
+	exit(1);
 
 	if(argc != 2 && argc != 3) {
 		printf("Syntax: ./imoacor parameter_file_name [#runs]\n");
