@@ -66,3 +66,7 @@ void subInterval(int index, int i, int j){
   arrayResults[index][0] = arrayTest[i][0] - arrayTest[j][0];
   arrayResults[index][1] = arrayTest[i][1] - arrayTest[j][1];
 }
+
+void multInterval(int index, int i, int j){
+  
+}
