@@ -48,6 +48,19 @@ void initializeIntervals(){
     printf("\n");
   }
 
+  printf("-------------------\n");
+
+  multInterval(0, 0, 1);
+  multInterval(1, 0, 2);
+  multInterval(2, 0, 3);
+  multInterval(3, 0, 4);
+
+  for(i = 0; i < 4; i++){
+    printf("%f ", arrayResults[i][0]);
+    printf("%f ", arrayResults[i][1]);
+    printf("\n");
+  }
+
 }
 
 float generateRandomValueINT(float a, float b) {
@@ -68,5 +81,41 @@ void subInterval(int index, int i, int j){
 }
 
 void multInterval(int index, int i, int j){
-  
+  float min = 9999999999;
+  float max = -9999999999;
+
+  if((arrayTest[i][0] * arrayTest[j][0]) < min){
+    min = arrayTest[i][0] * arrayTest[j][0];
+  }
+
+  if((arrayTest[i][0] * arrayTest[j][1]) < min){
+    min = arrayTest[i][0] * arrayTest[j][1];
+  }
+
+  if((arrayTest[i][1] * arrayTest[j][0]) < min){
+    min = arrayTest[i][1] * arrayTest[j][0];
+  }
+
+  if((arrayTest[i][1] * arrayTest[j][1]) < min){
+    min = arrayTest[i][1] * arrayTest[j][1];
+  }
+  // Max
+  if((arrayTest[i][0] * arrayTest[j][0]) > max){
+    max = arrayTest[i][0] * arrayTest[j][0];
+  }
+
+  if((arrayTest[i][0] * arrayTest[j][1]) > max){
+    max = arrayTest[i][0] * arrayTest[j][1];
+  }
+
+  if((arrayTest[i][1] * arrayTest[j][0]) > max){
+    max = arrayTest[i][1] * arrayTest[j][0];
+  }
+
+  if((arrayTest[i][1] * arrayTest[j][1]) > max){
+    max = arrayTest[i][1] * arrayTest[j][1];
+  }
+
+  arrayResults[index][0] = min;
+  arrayResults[index][1] = max;
 }
