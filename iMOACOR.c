@@ -100,8 +100,8 @@ void run(int exec, int dm){;
 	// Normalize objective vectors
 	normalizeObjFuncs(MAX_ARCHIVE_SIZE, _PHE_TYPE_);	
 	// Apply R2ranking to the pheromones
-	R2rankingPheromones();
-	// initValues(dm);
+	// R2rankingPheromones();
+	initValues(dm);
 	// readVars();
 	
 	int size;	
@@ -111,11 +111,11 @@ void run(int exec, int dm){;
 		Union(); // Las hormigas son las que guardan la solución
 		size = M + T.nap;	
 		normalizeObjFuncs(size, _ANTS_TYPE_);			
-		R2ranking(size);
-		// ORankingAnts(size);
+		// R2ranking(size);
+		ORankingAnts(size);
 		PheromoneUpdate(size);
-		// ORankingPheromones(size);
-		R2rankingPheromones();
+		ORankingPheromones(size);
+		// R2rankingPheromones();
 		genCounter++;		
 	}
 
