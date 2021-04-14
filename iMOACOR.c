@@ -14,9 +14,9 @@ void run(int);
 
 int main(int argc, char *argv[]){
 
-	initializeIntervals();
-	free_Memory();
-	exit(1);
+	// initializeIntervals();
+	// free_Memory();
+	// exit(1);
 
 	if(argc != 2 && argc != 3) {
 		printf("Syntax: ./imoacor parameter_file_name [#runs]\n");
@@ -100,6 +100,7 @@ void run(int exec){;
 	// Apply R2ranking to the pheromones
 	// R2rankingPheromones();
 	initValues(1);
+	printf("***\n");
 	
 	int size;	
 	while(genCounter < Gmax){
@@ -109,8 +110,11 @@ void run(int exec){;
 		size = M + T.nap;	
 		normalizeObjFuncs(size, _ANTS_TYPE_);			
 		// R2ranking(size);
+		printf("***\n");
 		ORankingAnts(size);
+		printf("***\n");
 		PheromoneUpdate(size);
+		printf("***\n");
 		ORankingPheromones(size);
 		// R2rankingPheromones();
 		genCounter++;		

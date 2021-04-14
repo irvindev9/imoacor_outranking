@@ -1,9 +1,9 @@
 #include "../headers/Outranking.h"
 
-float Epsilon = 0.1; // 0.05 a 0.1
-float Beta = 0.35; // 0.25 a 0.4
-float Lamdba = 0.6; // 0.55 a 0.75
-float weights[5];
+float Epsilon[2]; // 0.05 a 0.1
+float Beta[2]; // 0.25 a 0.4
+float Lamdba[2]; // 0.55 a 0.75
+float weights[5][2];
 
 float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
 float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
@@ -119,30 +119,54 @@ void initValues(int dm){
 
 	FILE *archivo;
 	char str[100];
-	sprintf(str, "output/DM%d_config.txt", dm);
+	sprintf(str, "output/DM%d_%s_config.txt", dm, Fname);
 	archivo = fopen(str, "r");
+	float tempweight = 0;
 	if(archivo == NULL){
 		printf("The file %s couldn't be found... creating..\n", str);
-		// exit(-1);
 		archivo = fopen(str, "w");
+		float Epsilontemp = generateRandomValue(0.05, 0.1);
+		Epsilon[0] = Epsilontemp - 0.02;
+		Epsilon[1] = Epsilontemp + 0.02;
+		// El rango de Epsilon entre 0.01 y 0.02*
+		float Betatemp = generateRandomValue(0.25, 0.4);
+		Beta[0] = Betatemp - 0.02;
+		Beta[1] = Betatemp + 0.02;
+		float Lamdbatemp = generateRandomValue(0.6, 0.7);
+		Lamdba[0] = Lamdbatemp - 0.09;
+		Lamdba[1] = Lamdbatemp + 0.09;
+		// Rango de intervalo .09
+		fprintf(archivo, "%f,%f\n", Epsilon[0],Epsilon[1]);
+		fprintf(archivo, "%f,%f\n", Beta[0],Beta[1]);
+		fprintf(archivo, "%f,%f\n", Lamdba[0],Lamdba[1]);
 		// Weights
-		fprintf(archivo, "%f ", 0.05);
-		fprintf(archivo, "%f ", 0.04);
-		fprintf(archivo, "%f ", 0.01);
-		fprintf(archivo, "%f ", 0.2);
-		fprintf(archivo, "%f ", 0.05);
-		fprintf(archivo, "%f ", 0.05);
-		fprintf(archivo, "%f ", 0.01);
-		fprintf(archivo, "%f ", 0.09);
-		fprintf(archivo, "%f ", 0.35);
-		fprintf(archivo, "%f\n", 0.15);
+
+		for(i = 0;i < k; i++){
+			if(tempweight == 0){
+				float value = generateRandomValue(0.0, 0.20);
+				tempweight = 0.2 - value;
+				fprintf(archivo, "%f,", (value-0.03));
+				fprintf(archivo, "%f", (value+0.03));
+			}else{
+				fprintf(archivo, "%f,", (tempweight-0.03));
+				fprintf(archivo, "%f", (tempweight+0.03));
+				tempweight = 0;
+			}
+			
+			if(i == (k-1)){
+				fprintf(archivo, "\n");
+			}else{
+				fprintf(archivo, " ");
+			}
+		}
 
 		float vetoArray[k];
 		float indiferenciaArray[k];
 		// veto
 		for(i = 0;i < k; i++){
 			vetoArray[i] = generateRandomValue(0.10, 0.20);
-			fprintf(archivo, "%f", vetoArray[i]);
+			fprintf(archivo, "%f", (vetoArray[i]-0.02));
+			fprintf(archivo, "%f", (vetoArray[i]+0.02));
 			if(i == (k-1)){
 				fprintf(archivo, "\n");
 			}else{
@@ -153,7 +177,8 @@ void initValues(int dm){
 		// indiferencia
 		for(i = 0;i < k; i++){
 			indiferenciaArray[i] = generateRandomValue(0.01, 0.04);
-			fprintf(archivo, "%f", indiferenciaArray[i]);
+			fprintf(archivo, "%f", (indiferenciaArray[i]-0.02));
+			fprintf(archivo, "%f", (indiferenciaArray[i]+0.02));
 			if(i == (k-1)){
 				fprintf(archivo, "\n");
 			}else{
@@ -176,6 +201,7 @@ void initValues(int dm){
 	}
 
 	char line[5000];
+	char line2[5000];
 	int contlimiter = 0;
 	while( fgets(line,2000,archivo) ) {
 		int init_size = strlen(line);
@@ -185,16 +211,81 @@ void initValues(int dm){
 		while(ptr != NULL)
 		{
 			if(contlimiter == 0){
-				vectorW[cont_in] = atof(ptr);
+				char *token = strtok(ptr, ",");
+				int cont_in2 = 0;
+				while (token != NULL)
+				{
+					Epsilon[cont_in2] = atof(token);
+					cont_in2++;
+					token = strtok(NULL, ",");
+				}
+				// Epsilon = atof(ptr);
 			}
 			if(contlimiter == 1){
-				vectorV[cont_in] = atof(ptr);
+				// Beta = atof(ptr);
+				char *token = strtok(ptr, ",");
+				int cont_in2 = 0;
+				while (token != NULL)
+				{
+					Beta[cont_in2] = atof(token);
+					cont_in2++;
+					token = strtok(NULL, ",");
+				}
 			}
 			if(contlimiter == 2){
-				vectorU[cont_in] = atof(ptr);
+				char *token = strtok(ptr, ",");
+				int cont_in2 = 0;
+				while (token != NULL)
+				{
+					Lamdba[cont_in2] = atof(token);
+					cont_in2++;
+					token = strtok(NULL, ",");
+				}
+				// Lamdba = atof(ptr);
 			}
 			if(contlimiter == 3){
-				vectorS[cont_in] = atof(ptr);
+				char *token = strtok(ptr, ",");
+				int cont_in2 = 0;
+				while (token != NULL)
+				{
+					vectorW[cont_in][cont_in2] = atof(token);
+					cont_in2++;
+					token = strtok(NULL, ",");
+				}
+				// vectorW[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 4){
+				char *token = strtok(ptr, ",");
+				int cont_in2 = 0;
+				while (token != NULL)
+				{
+					vectorV[cont_in][cont_in2] = atof(token);
+					cont_in2++;
+					token = strtok(NULL, ",");
+				}
+				// vectorV[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 5){
+				char *token = strtok(ptr, ",");
+				int cont_in2 = 0;
+				while (token != NULL)
+				{
+					vectorU[cont_in][cont_in2] = atof(token);
+					cont_in2++;
+					token = strtok(NULL, ",");
+				}
+				// vectorU[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 6){
+				char *token = strtok(ptr, ",");
+				int cont_in2 = 0;
+				while (token != NULL)
+				{
+					vectorS[cont_in][cont_in2] = atof(token);
+					cont_in2++;
+					token = strtok(NULL, ",");
+				}
+				// vectorS[cont_in] = atof(ptr);
 			}
 			ptr = strtok(NULL, delim);
 			cont_in++;
@@ -202,9 +293,7 @@ void initValues(int dm){
 		contlimiter++;
 	}
 
-	for(i = 0; i < k; i++){
-		printf("%f ", vectorW[i]);
-	}
+	printf("%f***", Lamdba[0]);
 }
 
 float generateRandomValue(float a, float b) {
@@ -223,12 +312,12 @@ float concordance(int index1, int index2){
 		boolean xIky;
 		boolean xPky;
 
-		xIky = abs(T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i]) <= vectorU[i];
+		xIky = abs(T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i]) <= vectorU[i][0];
 
 		xPky = T.pheromones[index1].nFx[i] < T.pheromones[index2].nFx[i] && !(xIky);
 
 		if(xPky || xIky){
-			total += vectorW[i];
+			total += vectorW[i][0];
 		}
 	}
 
@@ -246,13 +335,13 @@ float discordance(int index1, int index2){
 
 		float dis = T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i];
 
-		if(dis < vectorS[i]){
+		if(dis < vectorS[i][0]){
 			result = 0;
 		}
-		if((vectorS[i] <= dis) && (dis < vectorV[i])){
-			result = (dis - vectorU[i]) / (vectorV[i] - vectorU[i]);
+		if((vectorS[i][0] <= dis) && (dis < vectorV[i][0])){
+			result = (dis - vectorU[i][0]) / (vectorV[i][0] - vectorU[i][0]);
 		}
-		if(dis >= vectorV[i]){
+		if(dis >= vectorV[i][0]){
 			result = 1;
 		}
 
@@ -273,21 +362,21 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 	// Encontrar por que no entra a 3 y 5 * !
 	// Calcular no dominada, debilmente, flujo neto (3, 4, 7)
 
-	if(xdominatey || ((sigma_x >= Lamdba) && (sigma_y < 0.5)) || ((sigma_x >= Lamdba) && ((0.5 <= sigma_y) && (sigma_y < Lamdba)) && (sigma_x - sigma_y >= Beta))){
+	if(xdominatey || ((sigma_x >= Lamdba[0]) && (sigma_y < 0.5)) || ((sigma_x >= Lamdba[0]) && ((0.5 <= sigma_y) && (sigma_y < Lamdba[0])) && (sigma_x - sigma_y >= Beta[0]))){
 		result = 1;
 		xPy = TRUE;
 	}else{
 		xPy = FALSE;
 	}
 
-	if((sigma_x >= Lamdba) && (sigma_y >= Lamdba) && (abs(sigma_x - sigma_y) <= Epsilon)){
+	if((sigma_x >= Lamdba[0]) && (sigma_y >= Lamdba[0]) && (abs(sigma_x - sigma_y) <= Epsilon[0])){
 		result = 2;
 		xIy = TRUE;
 	}else{
 		xIy = FALSE;
 	}
 
-	if((sigma_x >= Lamdba) && (sigma_x >= sigma_y) && !(xPy) && !(xIy)){
+	if((sigma_x >= Lamdba[0]) && (sigma_x >= sigma_y) && !(xPy) && !(xIy)){
 		result = 3;
 	}
 
@@ -295,7 +384,7 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 		result = 4;
 	}
 
-	if(((0.5 <= sigma_x) && (sigma_x <= Lamdba)) && (sigma_y < 0.5) && ((sigma_x - sigma_y) > (Beta / 2))){
+	if(((0.5 <= sigma_x) && (sigma_x <= Lamdba[0])) && (sigma_y < 0.5) && ((sigma_x - sigma_y) > (Beta[0] / 2))){
 		result = 5;
 	}
 
@@ -411,12 +500,12 @@ float concordanceAnts(int index1, int index2){
 		boolean xIky;
 		boolean xPky;
 
-		xIky = abs(Ants[index1].nFx[i] - Ants[index2].nFx[i]) <= vectorU[i];
+		xIky = abs(Ants[index1].nFx[i] - Ants[index2].nFx[i]) <= vectorU[i][0];
 
 		xPky = Ants[index1].nFx[i] < Ants[index2].nFx[i] && !(xIky);
 
 		if(xPky || xIky){
-			total += vectorW[i];
+			total += vectorW[i][0];
 		}
 	}
 
@@ -432,13 +521,13 @@ float discordanceAnts(int index1, int index2){
 
 		float dis = Ants[index1].nFx[i] - Ants[index2].nFx[i];
 
-		if(dis < vectorS[i]){
+		if(dis < vectorS[i][0]){
 			result = 0;
 		}
-		if((vectorS[i] <= dis) && (dis < vectorV[i])){
-			result = (dis - vectorU[i]) / (vectorV[i] - vectorU[i]);
+		if((vectorS[i][0] <= dis) && (dis < vectorV[i][0])){
+			result = (dis - vectorU[i][0]) / (vectorV[i][0] - vectorU[i][0]);
 		}
-		if(dis >= vectorV[i]){
+		if(dis >= vectorV[i][0]){
 			result = 1;
 		}
 
