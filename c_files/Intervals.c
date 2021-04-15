@@ -70,15 +70,9 @@ float generateRandomValueINT(float a, float b) {
     return a + r;
 }
 
-void addInterval(int index, int i, int j){
-  arrayResults[index][0] = arrayTest[i][0] + arrayTest[j][0];
-  arrayResults[index][1] = arrayTest[i][1] + arrayTest[j][1];
-}
+void addInterval(int index, int i, int j){ arrayResults[index][0] = arrayTest[i][0] + arrayTest[j][0]; arrayResults[index][1] = arrayTest[i][1] + arrayTest[j][1]; }
 
-void subInterval(int index, int i, int j){
-  arrayResults[index][0] = arrayTest[i][0] - arrayTest[j][0];
-  arrayResults[index][1] = arrayTest[i][1] - arrayTest[j][1];
-}
+void subInterval(int index, int i, int j){ arrayResults[index][0] = arrayTest[i][0] - arrayTest[j][0]; arrayResults[index][1] = arrayTest[i][1] - arrayTest[j][1]; }
 
 void multInterval(int index, int i, int j){
   float min = 9999999999;
@@ -119,3 +113,7 @@ void multInterval(int index, int i, int j){
   arrayResults[index][0] = min;
   arrayResults[index][1] = max;
 }
+
+float possInterval(int index, int i, int j){ float ped = pedValue(i, j); if(ped > 1){ return 1; } if((0 <= ped) && (ped <= 1)){ return ped; } if(ped <= 0){ return 0; } }
+
+float pedValue(int i, int j){ return (arrayTest[i][1] - arrayTest[j][0]) / ((arrayTest[i][1] - arrayTest[i][0]) + (arrayTest[j][1] - arrayTest[j][0])); } 
