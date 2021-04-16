@@ -16,5 +16,7 @@ void subInterval(int, int, int);
 void multInterval(int, int, int);
 float possInterval(int, int, int);
 float pedValue(int, int);
+float PInterval(int, float);
+float pedValueInterval(float, int);
 
 #endif

@@ -188,7 +188,7 @@ void initValues(int dm){
 		// veto
 		for(i = 0;i < k; i++){
 			vetoArray[i] = generateRandomValue(0.10, 0.20);
-			fprintf(archivo, "%f", (vetoArray[i]-0.02));
+			fprintf(archivo, "%f,", (vetoArray[i]-0.02));
 			fprintf(archivo, "%f", (vetoArray[i]+0.02));
 			if(i == (k-1)){
 				fprintf(archivo, "\n");
@@ -200,7 +200,7 @@ void initValues(int dm){
 		// indiferencia
 		for(i = 0;i < k; i++){
 			indiferenciaArray[i] = generateRandomValue(0.01, 0.04);
-			fprintf(archivo, "%f", (indiferenciaArray[i]-0.02));
+			fprintf(archivo, "%f,", (indiferenciaArray[i]-0.02));
 			fprintf(archivo, "%f", (indiferenciaArray[i]+0.02));
 			if(i == (k-1)){
 				fprintf(archivo, "\n");
@@ -233,6 +233,7 @@ void initValues(int dm){
 		int cont_in = 0;
 		while(ptr != NULL)
 		{
+			printf("%d ", cont_in);
 			if(contlimiter == 0){
 				char *token = strtok(ptr, ",");
 				int cont_in2 = 0;
@@ -316,7 +317,6 @@ void initValues(int dm){
 		contlimiter++;
 	}
 
-	printf("%f***", Lamdba[0]);
 }
 
 float generateRandomValue(float a, float b) {

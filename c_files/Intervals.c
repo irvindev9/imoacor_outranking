@@ -17,49 +17,98 @@ void initializeIntervals(){
         val = generateRandomValueINT(5,10);
         arrayTest[i][j] = val;
       }
-      printf("%f ", val);
+      // printf("%f ", val);
     }
-    printf("\n");
+    // printf("\n");
   }
 
-  printf("-------------------\n");
+  // printf("-------------------\n");
 
-  addInterval(0, 0, 1);
-  addInterval(1, 0, 2);
-  addInterval(2, 0, 3);
-  addInterval(3, 0, 4);
+  // addInterval(0, 0, 1);
+  // addInterval(1, 0, 2);
+  // addInterval(2, 0, 3);
+  // addInterval(3, 0, 4);
+
+  // for(i = 0; i < 4; i++){
+  //   printf("%f ", arrayResults[i][0]);
+  //   printf("%f ", arrayResults[i][1]);
+  //   printf("\n");
+  // }
+
+  // printf("-------------------\n");
+
+  // subInterval(0, 0, 1);
+  // subInterval(1, 0, 2);
+  // subInterval(2, 0, 3);
+  // subInterval(3, 0, 4);
+
+  // for(i = 0; i < 4; i++){
+  //   printf("%f ", arrayResults[i][0]);
+  //   printf("%f ", arrayResults[i][1]);
+  //   printf("\n");
+  // }
+
+  // printf("-------------------\n");
+
+  // multInterval(0, 0, 1);
+  // multInterval(1, 0, 2);
+  // multInterval(2, 0, 3);
+  // multInterval(3, 0, 4);
+
+  // for(i = 0; i < 4; i++){
+  //   printf("%f ", arrayResults[i][0]);
+  //   printf("%f ", arrayResults[i][1]);
+  //   printf("\n");
+  // }
+  
+  // printf("%f\n", PInterval(0, (arrayTest[1][1] - arrayTest[2][1])));
+  // printf("%f\n", PInterval(0, (arrayTest[1][1] - arrayTest[3][1])));
+  // printf("%f\n", PInterval(0, (arrayTest[1][1] - arrayTest[4][1])));
+
+  
+  // printf("k %f k ", vectorW[1][0]);
+  // printf("k %f k ", vectorW[1][1]);
+
+  // exit(1);
+
+  float W_vector[4][2];
 
   for(i = 0; i < 4; i++){
-    printf("%f ", arrayResults[i][0]);
-    printf("%f ", arrayResults[i][1]);
-    printf("\n");
+    float c_up = 0;
+    float c_down = 0;
+    float d_up = 0;
+    float d_down = 0;
+    for(j = 0;j < 4; j++){
+      if(i != j){
+        // Revisar logica cuando este aplicado (por cuestiones de indices)
+        if(PInterval(i, (arrayTest[j][1] - arrayTest[i][1])) >= 0.5){
+          c_up += vectorW[i][1];
+          c_down += vectorW[i][0];
+        }else{
+          d_up += vectorW[i][1];
+          d_down += vectorW[i][0];
+        }
+      }
+    }
+
+    if((c_up + d_down) <= 1){
+      W_vector[i][1] = c_up;
+    }else{
+      W_vector[i][1] = 1 - d_down;
+    }
+
+    if((c_down + d_up) >= 1){
+      W_vector[i][0] = c_down;
+    }else{
+      W_vector[i][0] = 1 - d_up;
+    }
   }
 
-  printf("-------------------\n");
-
-  subInterval(0, 0, 1);
-  subInterval(1, 0, 2);
-  subInterval(2, 0, 3);
-  subInterval(3, 0, 4);
-
-  for(i = 0; i < 4; i++){
-    printf("%f ", arrayResults[i][0]);
-    printf("%f ", arrayResults[i][1]);
-    printf("\n");
-  }
-
-  printf("-------------------\n");
-
-  multInterval(0, 0, 1);
-  multInterval(1, 0, 2);
-  multInterval(2, 0, 3);
-  multInterval(3, 0, 4);
-
-  for(i = 0; i < 4; i++){
-    printf("%f ", arrayResults[i][0]);
-    printf("%f ", arrayResults[i][1]);
-    printf("\n");
-  }
+  // for(i = 0; i < 4; i++){
+  //   printf("%f ", W_vector[i][0]);
+  //   printf("%f ", W_vector[i][1]);
+  //   printf("\n");
+  // }
 
 }
 
@@ -117,3 +166,26 @@ void multInterval(int index, int i, int j){
 float possInterval(int index, int i, int j){ float ped = pedValue(i, j); if(ped > 1){ return 1; } if((0 <= ped) && (ped <= 1)){ return ped; } if(ped <= 0){ return 0; } }
 
 float pedValue(int i, int j){ return (arrayTest[i][1] - arrayTest[j][0]) / ((arrayTest[i][1] - arrayTest[i][0]) + (arrayTest[j][1] - arrayTest[j][0])); } 
+
+float PInterval(int index, float subtotal){
+  float ped = pedValueInterval(subtotal, index);
+  // printf("vals : %f %d\n", subtotal, index);
+  // printf("ped : %f\n", ped);
+  if (ped > 1) {
+    // printf("1\n");
+    return 1;
+  }
+  if ((0 <= ped) && (ped <= 1)) {
+    // printf("%f\n", ped);
+    return ped;
+  }
+  if (ped <= 0) {
+    // printf("0\n");
+    return 0;
+  }
+}
+
+float pedValueInterval(float i, int j){ 
+  // printf("(%f - (-%f)) / ((-%f) - (-%f))\n",i,vectorU[j][0], vectorU[j][1], vectorU[j][0]);
+  return (i - (-vectorU[j][0])) / ((-vectorU[j][1]) - (-vectorU[j][0]));
+} 
