@@ -223,6 +223,11 @@ void initValues(int dm){
 		archivo = fopen(str, "r");
 	}
 
+	FILE *archivo2;
+	char str2[100];
+	sprintf(str2, "output/tmp_config.txt");
+	archivo2 = fopen(str2, "w");
+
 	char line[5000];
 	char line2[5000];
 	int contlimiter = 0;
@@ -233,90 +238,157 @@ void initValues(int dm){
 		int cont_in = 0;
 		while(ptr != NULL)
 		{
-			printf("%d ", cont_in);
-			if(contlimiter == 0){
-				char *token = strtok(ptr, ",");
-				int cont_in2 = 0;
-				while (token != NULL)
-				{
-					Epsilon[cont_in2] = atof(token);
-					cont_in2++;
-					token = strtok(NULL, ",");
-				}
-				// Epsilon = atof(ptr);
-			}
-			if(contlimiter == 1){
-				// Beta = atof(ptr);
-				char *token = strtok(ptr, ",");
-				int cont_in2 = 0;
-				while (token != NULL)
-				{
-					Beta[cont_in2] = atof(token);
-					cont_in2++;
-					token = strtok(NULL, ",");
-				}
-			}
-			if(contlimiter == 2){
-				char *token = strtok(ptr, ",");
-				int cont_in2 = 0;
-				while (token != NULL)
-				{
-					Lamdba[cont_in2] = atof(token);
-					cont_in2++;
-					token = strtok(NULL, ",");
-				}
-				// Lamdba = atof(ptr);
-			}
-			if(contlimiter == 3){
-				char *token = strtok(ptr, ",");
-				int cont_in2 = 0;
-				while (token != NULL)
-				{
-					vectorW[cont_in][cont_in2] = atof(token);
-					cont_in2++;
-					token = strtok(NULL, ",");
-				}
-				// vectorW[cont_in] = atof(ptr);
-			}
-			if(contlimiter == 4){
-				char *token = strtok(ptr, ",");
-				int cont_in2 = 0;
-				while (token != NULL)
-				{
-					vectorV[cont_in][cont_in2] = atof(token);
-					cont_in2++;
-					token = strtok(NULL, ",");
-				}
-				// vectorV[cont_in] = atof(ptr);
-			}
-			if(contlimiter == 5){
-				char *token = strtok(ptr, ",");
-				int cont_in2 = 0;
-				while (token != NULL)
-				{
-					vectorU[cont_in][cont_in2] = atof(token);
-					cont_in2++;
-					token = strtok(NULL, ",");
-				}
-				// vectorU[cont_in] = atof(ptr);
-			}
-			if(contlimiter == 6){
-				char *token = strtok(ptr, ",");
-				int cont_in2 = 0;
-				while (token != NULL)
-				{
-					vectorS[cont_in][cont_in2] = atof(token);
-					cont_in2++;
-					token = strtok(NULL, ",");
-				}
-				// vectorS[cont_in] = atof(ptr);
-			}
+			// printf("%s \n", ptr);
+			fprintf(archivo2, "%s\n", ptr);	
+			// printf("%d ", cont_in);
+			// if(contlimiter == 0){
+			// 	char *token = strtok(ptr, ",");
+			// 	int cont_in2 = 0;
+			// 	while (token != NULL)
+			// 	{
+			// 		// printf("%d ", cont_in2);
+			// 		Epsilon[cont_in2] = atof(token);
+			// 		cont_in2++;
+			// 		token = strtok(NULL, ",");
+			// 	}
+			// 	// Epsilon = atof(ptr);
+			// }
+			// if(contlimiter == 1){
+			// 	// Beta = atof(ptr);
+			// 	char *token = strtok(ptr, ",");
+			// 	int cont_in2 = 0;
+			// 	while (token != NULL)
+			// 	{
+			// 		Beta[cont_in2] = atof(token);
+			// 		cont_in2++;
+			// 		token = strtok(NULL, ",");
+			// 	}
+			// }
+			// if(contlimiter == 2){
+			// 	char *token = strtok(ptr, ",");
+			// 	int cont_in2 = 0;
+			// 	while (token != NULL)
+			// 	{
+			// 		Lamdba[cont_in2] = atof(token);
+			// 		cont_in2++;
+			// 		token = strtok(NULL, ",");
+			// 	}
+			// 	// Lamdba = atof(ptr);
+			// }
+			// if(contlimiter == 3){
+			// 	char *token = strtok(ptr, ",");
+			// 	int cont_in2 = 0;
+			// 	while (token != NULL)
+			// 	{
+			// 		vectorW[cont_in][cont_in2] = atof(token);
+			// 		cont_in2++;
+			// 		token = strtok(NULL, ",");
+			// 	}
+			// 	// vectorW[cont_in] = atof(ptr);
+			// }
+			// if(contlimiter == 4){
+			// 	char *token = strtok(ptr, ",");
+			// 	int cont_in2 = 0;
+			// 	while (token != NULL)
+			// 	{
+			// 		vectorV[cont_in][cont_in2] = atof(token);
+			// 		cont_in2++;
+			// 		token = strtok(NULL, ",");
+			// 	}
+			// 	// vectorV[cont_in] = atof(ptr);
+			// }
+			// if(contlimiter == 5){
+			// 	// printf("%s \n",ptr);
+			// 	char *token = strtok(ptr, ",");
+			// 	int cont_in2 = 0;
+			// 	while (token != NULL)
+			// 	{
+			// 		vectorU[cont_in][cont_in2] = atof(token);
+			// 		cont_in2++;
+			// 		token = strtok(NULL, ",");
+			// 	}
+			// 	// vectorU[cont_in] = atof(ptr);
+			// }
+			// // if(contlimiter == 6){
+			// // 	char *token = strtok(ptr, ",");
+			// // 	int cont_in2 = 0;
+			// // 	while (token != NULL)
+			// // 	{
+			// // 		vectorS[cont_in][cont_in2] = atof(token);
+			// // 		cont_in2++;
+			// // 		token = strtok(NULL, ",");
+			// // 	}
+			// // 	// vectorS[cont_in] = atof(ptr);
+			// // }
 			ptr = strtok(NULL, delim);
 			cont_in++;
 		}
 		contlimiter++;
 	}
 
+	fclose(archivo2);
+	archivo2 = fopen(str2, "r");
+	contlimiter = 0;
+
+	while( fgets(line,2000,archivo2) ) {
+		// printf(archivo2, "%s\n");	
+		int init_size = strlen(line);
+		char delim[] = ",";
+		char *ptr = strtok(line, delim);
+		int cont_in = 0;
+		while(ptr != NULL)
+		{
+			if(contlimiter == 0){
+				// printf("%s\n", ptr);	
+				Epsilon[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 2){
+				// printf("%s\n", ptr);	
+				Beta[cont_in] = atof(ptr);
+			}
+			if(contlimiter == 4){
+				// printf("%s\n", ptr);	
+				Lamdba[cont_in] = atof(ptr);
+			}
+			if(contlimiter >= 6 && contlimiter <= 15){
+				// printf("%s\n", ptr);	
+				vectorW[contlimiter-6][cont_in] = atof(ptr);
+			}
+			if(contlimiter >= 17 && contlimiter <= 26){
+				// printf("%s\n", ptr);	
+				vectorV[contlimiter-17][cont_in] = atof(ptr);
+			}
+			if(contlimiter >= 28 && contlimiter <= 37){
+				// printf("%s\n", ptr);	
+				vectorV[contlimiter-28][cont_in] = atof(ptr);
+			}
+			if(contlimiter >= 39 && contlimiter <= 48){
+				// printf("%s\n", ptr);	
+				vectorU[contlimiter-39][cont_in] = atof(ptr);
+			}
+			if(contlimiter >= 39 && contlimiter <= 48){
+				// printf("%s\n", ptr);	
+				vectorU[contlimiter-39][cont_in] = atof(ptr);
+			}
+			// // if(contlimiter == 6){
+			// // 	char *token = strtok(ptr, ",");
+			// // 	int cont_in2 = 0;
+			// // 	while (token != NULL)
+			// // 	{
+			// // 		vectorS[cont_in][cont_in2] = atof(token);
+			// // 		cont_in2++;
+			// // 		token = strtok(NULL, ",");
+			// // 	}
+			// // 	// vectorS[cont_in] = atof(ptr);
+			// // }
+			ptr = strtok(NULL, delim);
+			cont_in++;
+		}
+		contlimiter++;
+	}
+
+	printf("%f][\n", vectorV[0][0]);
+	printf("%f][\n", vectorV[0][1]);
 }
 
 float generateRandomValue(float a, float b) {

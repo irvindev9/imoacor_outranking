@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
 	init_Weight_Vectors(WV, H, k);
 
 	initValues(1);
-	initializeIntervals();
+	// initializeIntervals();
 	exit(1);
 
   	int i,j;

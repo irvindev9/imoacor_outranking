@@ -14,9 +14,9 @@ float generateRandomValueINT(float, float);
 void addInterval(int, int, int);
 void subInterval(int, int, int);
 void multInterval(int, int, int);
-float possInterval(int, int, int);
+float possInterval( int, int);
 float pedValue(int, int);
-float PInterval(int, float);
-float pedValueInterval(float, int);
+float PInterval(float, float, float);
+float pedValueInterval(float, float, float);
 
 #endif
