@@ -242,3 +242,44 @@ boolean xSy(int i, int j){
 boolean xPy(int i, int j){
   return (xSy(i, j) && !xSy(j, i));
 }
+
+
+void intervalsPheromones(){
+  float W_concordance[T.nap][T.nap][2];
+  int i, j;
+
+  for(i = 0; i < T.nap; i++){
+    float c_up = 0;
+    float c_down = 0;
+    float d_up = 0;
+    float d_down = 0;
+    for(j = 0;j < T.nap; j++){
+      if(i != j){
+        // Revisar logica cuando este aplicado (por cuestiones de indices)
+        if(PInterval(vectorU[i][0], vectorU[i][1], (T.pheromones[j].nFx[i] - T.pheromones[i].nFx[i])) >= 0.5){
+          c_up += vectorW[i][1];
+          c_down += vectorW[i][0];
+        }else{
+          d_up += vectorW[i][1];
+          d_down += vectorW[i][0];
+        }
+      }
+    }
+
+    if((c_up + d_down) <= 1){
+      W_concordance[i][j][1] = c_up;
+    }else{
+      W_concordance[i][j][1] = 1 - d_down;
+    }
+
+    if((c_down + d_up) >= 1){
+      W_concordance[i][j][0] = c_down;
+    }else{
+      W_concordance[i][j][0] = 1 - d_up;
+    }
+  }
+}
+
+float intervalConcordance(int index1, int index2){
+  
+}
