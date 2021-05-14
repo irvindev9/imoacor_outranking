@@ -14,6 +14,7 @@ void readData();
 void readVars();
 void ORankingPheromones(int);
 void initValues(int);
+void initWeight();
 float concordance(int, int);
 float discordance(int, int);
 float preferenceIdentifier(float, float, boolean);

@@ -26,6 +26,8 @@ void allocate_Memory(){
 		Ants[i].x = (double *)calloc(n, sizeof(double));
 		Ants[i].Fx = (double *)calloc(k, sizeof(double));	
 		Ants[i].nFx = (double *)calloc(k, sizeof(double));	
+		Ants[i].xSy = (int *)calloc(k, sizeof(int));	
+		Ants[i].xPy = (int *)calloc(k, sizeof(int));	
 	}
 
 	for(i = 0; i < N; i++){
@@ -38,6 +40,8 @@ void allocate_Memory(){
 		T.pheromones[i].x = (double *)calloc(n, sizeof(double));
 		T.pheromones[i].Fx = (double *)calloc(k, sizeof(double));
 		T.pheromones[i].nFx = (double *)calloc(k, sizeof(double));
+		T.pheromones[i].xSy = (int *)calloc(k, sizeof(int));
+		T.pheromones[i].xPy = (int *)calloc(k, sizeof(int));
 	}
 }
 
@@ -48,6 +52,8 @@ void free_Memory(){
 		free(Ants[i].x);
 		free(Ants[i].Fx);	
 		free(Ants[i].nFx);	
+		free(Ants[i].xSy);	
+		free(Ants[i].xPy);	
 	}
 
 	for(i = 0; i < N; i++){
@@ -61,6 +67,8 @@ void free_Memory(){
 		free(T.pheromones[i].x);
 		free(T.pheromones[i].Fx);
 		free(T.pheromones[i].nFx);
+		free(T.pheromones[i].xSy);
+		free(T.pheromones[i].xPy);
 	}
 
 

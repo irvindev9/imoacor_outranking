@@ -5,9 +5,9 @@
 // float Lamdba = 0.6; // 0.55 a 0.75
 float weights[10];
 
-float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
-float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
-float valueV = 0.2; // 0.2 a 0.3 > 0.10 y 0.20
+float valueU = 0.05; // 0.01 a 0.06 > .04 y .01 INDIFERENCIA
+float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2 PREVETO
+float valueV = 0.2; // 0.2 a 0.3 > 0.10 y 0.20 VETO
 
 // Restar los valores en ese objetivo y dividirlos sobre el valor de ese parametro en sigma
 
@@ -137,6 +137,44 @@ void ORankingPheromones(int size){
 
 }
 
+void initWeight(){
+	int i, j;
+	float weights[k+1];
+	float weightsToPrint[k+1];
+	float tmp;
+
+	weights[0] = 0;
+
+	for(i = 1; i < (k + 1); i++){
+		weights[i] = floor(100*generateRandomValue(0, 1))/100;
+	}
+
+	weights[k] = 1;
+
+	for(i=0; i<k+1; i++){
+		for(j=i+1; j<k; j++){
+			if(weights[j] < weights[i]){
+				tmp = weights[i];
+				weights[i] = weights[j];
+				weights[j] = tmp;
+			}
+		}
+	}
+
+	float total = 0;
+
+	for(i = 0; i < k+1; i++){
+		weightsToPrint[i] = weights[i] - weights[i - 1];
+		total = total + (weights[i] - weights[i - 1]);
+	}
+
+	for(i = 0; i < (k+1); i++){
+		if(i != 0 && i != (k+1)){
+			printf("%f ", weightsToPrint[i]);
+		}
+	}
+}
+
 void initValues(int dm){
 	int i, j;
 
@@ -163,25 +201,74 @@ void initValues(int dm){
 		fprintf(archivo, "%f,%f\n", Beta[0],Beta[1]);
 		fprintf(archivo, "%f,%f\n", Lamdba[0],Lamdba[1]);
 		// Weights
-
-		for(i = 0;i < k; i++){
-			if(tempweight == 0){
-				float value = generateRandomValue(0.0, 0.20);
-				tempweight = 0.2 - value;
-				fprintf(archivo, "%f,", (value-0.03));
-				fprintf(archivo, "%f", (value+0.03));
-			}else{
-				fprintf(archivo, "%f,", (tempweight-0.03));
-				fprintf(archivo, "%f", (tempweight+0.03));
-				tempweight = 0;
-			}
+		// float partsdecimal = 1.0 / k;
+		// for(i = 0;i < k; i++){
+		// 	if(tempweight == 0){
+		// 		float value = generateRandomValue(0.0, partsdecimal);
+		// 		tempweight = partsdecimal - value;
+		// 		fprintf(archivo, "%f,", ((value-0.03 < 0) ? 0 : value-0.03));
+		// 		fprintf(archivo, "%f", (value+0.03));
+		// 	}else{
+		// 		fprintf(archivo, "%f,", ((tempweight-0.03 < 0) ? 0 : tempweight-0.03));
+		// 		fprintf(archivo, "%f", (tempweight+0.03));
+		// 		tempweight = 0;
+		// 	}
 			
-			if(i == (k-1)){
+		// 	if(i == (k-1)){
+		// 		fprintf(archivo, "\n");
+		// 	}else{
+		// 		fprintf(archivo, " ");
+		// 	}
+		// }
+
+	float weights[k+1];
+	float weightsToPrint[k+1];
+	float tmp;
+
+	weights[0] = 0;
+
+	for(i = 1; i < (k + 1); i++){
+		weights[i] = floor(100*generateRandomValue(0, 1))/100;
+	}
+
+	weights[k] = 1;
+
+	for(i=0; i<k+1; i++){
+		for(j=i+1; j<k; j++){
+			if(weights[j] < weights[i]){
+				tmp = weights[i];
+				weights[i] = weights[j];
+				weights[j] = tmp;
+			}
+		}
+	}
+
+	float total = 0;
+
+	for(i = 0; i < k+1; i++){
+		weightsToPrint[i] = weights[i] - weights[i - 1];
+		total = total + (weights[i] - weights[i - 1]);
+	}
+
+	float zero = 0;
+
+	for(i = 0; i < (k+1); i++){
+		if(i != 0 && i != (k+1)){
+			printf("%f ", weightsToPrint[i]);
+			if(weightsToPrint[i]-0.03 < zero){
+				fprintf(archivo, "%f,", 0);
+			}else{
+				fprintf(archivo, "%f,", ((weightsToPrint[i]-0.03 < zero) ? zero : weightsToPrint[i]-0.03));
+			}
+			fprintf(archivo, "%f", (weightsToPrint[i]+0.03));
+
+			if(i == (k)){
 				fprintf(archivo, "\n");
 			}else{
 				fprintf(archivo, " ");
 			}
 		}
+	}
 
 		float vetoArray[k];
 		float indiferenciaArray[k];
@@ -200,7 +287,7 @@ void initValues(int dm){
 		// indiferencia
 		for(i = 0;i < k; i++){
 			indiferenciaArray[i] = generateRandomValue(0.01, 0.04);
-			fprintf(archivo, "%f,", (indiferenciaArray[i]-0.02));
+			fprintf(archivo, "%f,", (((indiferenciaArray[i]-0.02) < 0) ? 0 : (indiferenciaArray[i]-0.02)));
 			fprintf(archivo, "%f", (indiferenciaArray[i]+0.02));
 			if(i == (k-1)){
 				fprintf(archivo, "\n");
@@ -210,14 +297,14 @@ void initValues(int dm){
 		}
 
 		// Preveto
-		for(i = 0;i < k; i++){
-			fprintf(archivo, "%f", (vetoArray[i] + indiferenciaArray[i]) / 2);
-			if(i == (k-1)){
-				fprintf(archivo, "\n");
-			}else{
-				fprintf(archivo, " ");
-			}
-		}
+		// for(i = 0;i < k; i++){
+		// 	fprintf(archivo, "%f", (vetoArray[i] + indiferenciaArray[i]) / 2);
+		// 	if(i == (k-1)){
+		// 		fprintf(archivo, "\n");
+		// 	}else{
+		// 		fprintf(archivo, " ");
+		// 	}
+		// }
 
 		fclose(archivo);
 		archivo = fopen(str, "r");
@@ -238,88 +325,7 @@ void initValues(int dm){
 		int cont_in = 0;
 		while(ptr != NULL)
 		{
-			// printf("%s \n", ptr);
 			fprintf(archivo2, "%s\n", ptr);	
-			// printf("%d ", cont_in);
-			// if(contlimiter == 0){
-			// 	char *token = strtok(ptr, ",");
-			// 	int cont_in2 = 0;
-			// 	while (token != NULL)
-			// 	{
-			// 		// printf("%d ", cont_in2);
-			// 		Epsilon[cont_in2] = atof(token);
-			// 		cont_in2++;
-			// 		token = strtok(NULL, ",");
-			// 	}
-			// 	// Epsilon = atof(ptr);
-			// }
-			// if(contlimiter == 1){
-			// 	// Beta = atof(ptr);
-			// 	char *token = strtok(ptr, ",");
-			// 	int cont_in2 = 0;
-			// 	while (token != NULL)
-			// 	{
-			// 		Beta[cont_in2] = atof(token);
-			// 		cont_in2++;
-			// 		token = strtok(NULL, ",");
-			// 	}
-			// }
-			// if(contlimiter == 2){
-			// 	char *token = strtok(ptr, ",");
-			// 	int cont_in2 = 0;
-			// 	while (token != NULL)
-			// 	{
-			// 		Lamdba[cont_in2] = atof(token);
-			// 		cont_in2++;
-			// 		token = strtok(NULL, ",");
-			// 	}
-			// 	// Lamdba = atof(ptr);
-			// }
-			// if(contlimiter == 3){
-			// 	char *token = strtok(ptr, ",");
-			// 	int cont_in2 = 0;
-			// 	while (token != NULL)
-			// 	{
-			// 		vectorW[cont_in][cont_in2] = atof(token);
-			// 		cont_in2++;
-			// 		token = strtok(NULL, ",");
-			// 	}
-			// 	// vectorW[cont_in] = atof(ptr);
-			// }
-			// if(contlimiter == 4){
-			// 	char *token = strtok(ptr, ",");
-			// 	int cont_in2 = 0;
-			// 	while (token != NULL)
-			// 	{
-			// 		vectorV[cont_in][cont_in2] = atof(token);
-			// 		cont_in2++;
-			// 		token = strtok(NULL, ",");
-			// 	}
-			// 	// vectorV[cont_in] = atof(ptr);
-			// }
-			// if(contlimiter == 5){
-			// 	// printf("%s \n",ptr);
-			// 	char *token = strtok(ptr, ",");
-			// 	int cont_in2 = 0;
-			// 	while (token != NULL)
-			// 	{
-			// 		vectorU[cont_in][cont_in2] = atof(token);
-			// 		cont_in2++;
-			// 		token = strtok(NULL, ",");
-			// 	}
-			// 	// vectorU[cont_in] = atof(ptr);
-			// }
-			// // if(contlimiter == 6){
-			// // 	char *token = strtok(ptr, ",");
-			// // 	int cont_in2 = 0;
-			// // 	while (token != NULL)
-			// // 	{
-			// // 		vectorS[cont_in][cont_in2] = atof(token);
-			// // 		cont_in2++;
-			// // 		token = strtok(NULL, ",");
-			// // 	}
-			// // 	// vectorS[cont_in] = atof(ptr);
-			// // }
 			ptr = strtok(NULL, delim);
 			cont_in++;
 		}
@@ -331,7 +337,6 @@ void initValues(int dm){
 	contlimiter = 0;
 
 	while( fgets(line,2000,archivo2) ) {
-		// printf(archivo2, "%s\n");	
 		int init_size = strlen(line);
 		char delim[] = ",";
 		char *ptr = strtok(line, delim);
@@ -339,56 +344,34 @@ void initValues(int dm){
 		while(ptr != NULL)
 		{
 			if(contlimiter == 0){
-				// printf("%s\n", ptr);	
 				Epsilon[cont_in] = atof(ptr);
 			}
 			if(contlimiter == 2){
-				// printf("%s\n", ptr);	
 				Beta[cont_in] = atof(ptr);
 			}
 			if(contlimiter == 4){
-				// printf("%s\n", ptr);	
 				Lamdba[cont_in] = atof(ptr);
 			}
 			if(contlimiter >= 6 && contlimiter <= 15){
-				// printf("%s\n", ptr);	
+				// PESO
 				vectorW[contlimiter-6][cont_in] = atof(ptr);
 			}
 			if(contlimiter >= 17 && contlimiter <= 26){
-				// printf("%s\n", ptr);	
+				// VETO
 				vectorV[contlimiter-17][cont_in] = atof(ptr);
 			}
 			if(contlimiter >= 28 && contlimiter <= 37){
-				// printf("%s\n", ptr);	
-				vectorV[contlimiter-28][cont_in] = atof(ptr);
+				// INDIFERENCIA
+				vectorU[contlimiter-28][cont_in] = atof(ptr);
 			}
-			if(contlimiter >= 39 && contlimiter <= 48){
-				// printf("%s\n", ptr);	
-				vectorU[contlimiter-39][cont_in] = atof(ptr);
-			}
-			if(contlimiter >= 39 && contlimiter <= 48){
-				// printf("%s\n", ptr);	
-				vectorU[contlimiter-39][cont_in] = atof(ptr);
-			}
-			// // if(contlimiter == 6){
-			// // 	char *token = strtok(ptr, ",");
-			// // 	int cont_in2 = 0;
-			// // 	while (token != NULL)
-			// // 	{
-			// // 		vectorS[cont_in][cont_in2] = atof(token);
-			// // 		cont_in2++;
-			// // 		token = strtok(NULL, ",");
-			// // 	}
-			// // 	// vectorS[cont_in] = atof(ptr);
-			// // }
 			ptr = strtok(NULL, delim);
 			cont_in++;
 		}
 		contlimiter++;
 	}
 
-	printf("%f][\n", vectorV[0][0]);
-	printf("%f][\n", vectorV[0][1]);
+	printf("[%f][", vectorU[0][0]);
+	printf("%f]", vectorU[0][1]);
 }
 
 float generateRandomValue(float a, float b) {

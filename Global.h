@@ -32,6 +32,8 @@ typedef struct ANT{
 	int weight_index;			/* index of the weight corresponding to the best utility value. */
 	int kernelIndex;			/* Index of selected the Gaussian kernel */
 	double mmf;
+	int *xSy;
+	int *xPy;
 	//int USED;
 }ANT;
 
@@ -48,6 +50,8 @@ typedef struct PHEROMONE{
 	int rank;					/* Rank associated by the R2 ranking algorithm */
 	int rankOR;					/* Rank associated by the Outranking algorithm */
 	int weight_index;
+	int *xSy;
+	int *xPy;
 }PHEROMONE;
 
 typedef struct ARCHIVE{

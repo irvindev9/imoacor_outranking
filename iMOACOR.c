@@ -9,6 +9,7 @@
 #include "headers/WFG.h"
 #include "headers/Parameter.h"
 #include "headers/AntOperations.h"
+#include "headers/Intervals.h"
 
 void run(int, int);
 
@@ -69,9 +70,16 @@ int main(int argc, char *argv[]){
   	// Initialize weight vectors
 	init_Weight_Vectors(WV, H, k);
 
-	initValues(1);
-	// initializeIntervals();
-	exit(1);
+	// initValues(1);
+	// // initWeight();
+	// initPheromones();
+	// initRefpoints();
+	// // Insert z_nad into the first register of RECORD
+	// initRecord();
+	// // Normalize objective vectors
+	// normalizeObjFuncs(MAX_ARCHIVE_SIZE, _PHE_TYPE_);
+	// intervalsPheromones();
+	// exit(1);
 
   	int i,j;
   	// Execution of the algorithm varying the seed of the random number generator.
@@ -109,6 +117,8 @@ void run(int exec, int dm){;
 	// readVars();
 	
 	int size;	
+	printf("%d ", genCounter);
+	printf("%d ", Gmax);
 	while(genCounter < Gmax){
 		AntBasedSolutionConstruction();
 		updateRefpoints(Ants, M, k, genCounter);
@@ -116,11 +126,17 @@ void run(int exec, int dm){;
 		size = M + T.nap;	
 		normalizeObjFuncs(size, _ANTS_TYPE_);			
 		// R2ranking(size);
-		ORankingAnts(size);
+		// ORankingAnts(size);
+		intervalsAnts(size);
 		PheromoneUpdate(size);
-		ORankingPheromones(size);
+		// ORankingPheromones(size);
+		// printf("%d\n", genCounter);
+		intervalsPheromones();
 		// R2rankingPheromones();
+		printf("%d\n", genCounter);
 		genCounter++;		
+		// exit(1);
+		
 	}
 
 	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);

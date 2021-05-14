@@ -27,6 +27,7 @@ int compare_ant_alpha_or(const void *p1, const void *p2){
 	double anorm, bnorm;
 	a = (ANT *)p1;
 	b = (ANT *)p2;
+	
 
 	if(a->strictOR < b->strictOR){
 		return -1;
@@ -34,9 +35,9 @@ int compare_ant_alpha_or(const void *p1, const void *p2){
 		return 1;
 	}
 
-	if(a->weakOR < b->weakOR){
+	if(a->weakOR > b->weakOR){
 		return -1;
-	}else if(a->weakOR > b->weakOR){
+	}else if(a->weakOR < b->weakOR){
 		return 1;
 	}
 
@@ -61,9 +62,9 @@ int compare_pheromone_alpha_or(const void *p1, const void *p2){
 		return 1;
 	}
 
-	if(a->weakOR < b->weakOR){
+	if(a->weakOR > b->weakOR){
 		return -1;
-	}else if(a->weakOR > b->weakOR){
+	}else if(a->weakOR < b->weakOR){
 		return 1;
 	}
 
