@@ -165,29 +165,22 @@ float pedValue(int i, int j){ return (W_concordance[i][j][1] - Lamdba[0]) / ((W_
 
 float PInterval(float val1, float val2, float subtotal){
   float ped = pedValueInterval(subtotal, val1, val2);
-  // printf("\nvals : %f %f %f\n", subtotal, val1, val2);
-  // printf("ped : %f\n", ped);
   if (ped > 1) {
-    // printf("1\n");
     return 1;
   }
   if ((0 <= ped) && (ped <= 1)) {
-    // printf("%f\n", ped);
     return ped;
   }
   if (ped <= 0) {
-    // printf("0\n");
     return 0;
   }
 }
 
 float pedValueInterval(float i, float j1, float j2){ 
-  // printf("(%f - (-%f)) / ((-%f) - (-%f))\n",i,vectorU[j][0], vectorU[j][1], vectorU[j][0]);
   return (i - (j1)) / ((j2) - (j1));
 } 
 
 boolean xSy(int i, int j){
-  // return (Sigma_Array[i][j] > Sigma_Array[j][i]) && (Sigma_Array[i][j] >= Beta[1]);
   return Sigma_Array[i][j] >= Beta[1];
 }
 
@@ -204,7 +197,7 @@ void intervalsAnts(int size){
   
   int i, j, y, z;
 
-  printf("* %d * ", size);
+  // printf("* %d * ", size);
 
   for(i = 0; i < size; i++){
     float c_up = 0;
@@ -215,14 +208,6 @@ void intervalsAnts(int size){
       if(i != j){
         // Revisar logica cuando este aplicado (por cuestiones de indices)
         for(y = 0; y < k; y++){
-          // printf("%f ", vectorU[y][0]);
-          // printf("%f ", vectorU[y][1]);
-          // printf("%f ", vectorW[y][1]);
-          // printf("%f ", vectorW[y][0]);
-          // printf("%f ", T.pheromones[j].nFx[y]);
-          // printf("%f ", T.pheromones[i].nFx[y]);
-          // printf("%f ", PInterval(-vectorU[y][0], -vectorU[y][1], (T.pheromones[j].nFx[y] - T.pheromones[i].nFx[y])));
-          // exit(1);
           if(PInterval(-vectorU[y][0], -vectorU[y][1], (Ants[j].nFx[y] - Ants[i].nFx[y])) >= 0.5){
             c_up += vectorW[y][1];
             c_down += vectorW[y][0];
@@ -247,7 +232,7 @@ void intervalsAnts(int size){
     }
   }
 
-  printf("* %d * ", size);
+  // printf("* %d * ", size);
 
 
   float D_vector[size][size];
@@ -287,46 +272,26 @@ void intervalsAnts(int size){
     Ants[i].netscoreOR = 0;
     for(j = 0; j < size; j++){
       if(i != j){
-        // printf("%d ", xPyAnts(i, j));
-        // printf("%d ", xPyAnts(i, j));
-        // printf("%d ", i);
-        // printf("%f ", W_concordance[i][j][0]);
-        // printf("%f ", W_concordance[i][j][1]);
         Ants[i].weakOR += xSy(i, j); //Fortaleza en el modelo de Outranking
         Ants[i].strictOR += xPyAnts(j, i); //Debilidad en el modelo de Outranking
-        // Ants[i].xPy[j] = xPyAnts(i, j);
-        
-        // if(T.pheromones[i].xSy[j]){
-        //   printf("%d\n", T.pheromones[i].xSy[j]);
-        //   printf("%d\n", T.pheromones[i].xPy[j]);
-        // }
-        
-        // printf("%f ", Sigma_Array[i][j]);
-        // printf("%f ", W_concordance[i][j][1]);
       }
     }
-    // printf("%d ", Ants[i].strictOR);
-    // printf("%d ", Ants[i].weakOR);
   }
 
-  for(i = 0; i < size; i++){	
-		printf("Index: %d (%d, %d)\n", i, Ants[i].strictOR, Ants[i].weakOR, Ants[i].netscoreOR);
-	}
+  // for(i = 0; i < size; i++){	
+	// 	printf("Index: %d (%d, %d)\n", i, Ants[i].strictOR, Ants[i].weakOR, Ants[i].netscoreOR);
+	// }
 
   qsort(Ants, size, sizeof(ANT), (int (*)(const void *, const void *))&compare_ant_alpha_or);
 
-  for(i = 0; i < size; i++){	
-		printf("Index: %d (%d, %d)\n", i, Ants[i].strictOR, Ants[i].weakOR, Ants[i].netscoreOR);
-	}
-  exit(1);
-  // printf("finish");
+  // for(i = 0; i < size; i++){	
+	// 	printf("Index: %d (%d, %d)\n", i, Ants[i].strictOR, Ants[i].weakOR, Ants[i].netscoreOR);
+	// }
 }
 
 void intervalsPheromones(){
   
   int i, j, y, z;
-
-  // printf("%d\n", T.nap);
 
   for(i = 0; i < T.nap; i++){
     float c_up = 0;
@@ -337,14 +302,6 @@ void intervalsPheromones(){
       if(i != j){
         // Revisar logica cuando este aplicado (por cuestiones de indices)
         for(y = 0; y < k; y++){
-          // printf("%f ", vectorU[y][0]);
-          // printf("%f ", vectorU[y][1]);
-          // printf("%f ", vectorW[y][1]);
-          // printf("%f ", vectorW[y][0]);
-          // printf("%f ", T.pheromones[j].nFx[y]);
-          // printf("%f ", T.pheromones[i].nFx[y]);
-          // printf("%f ", PInterval(-vectorU[y][0], -vectorU[y][1], (T.pheromones[j].nFx[y] - T.pheromones[i].nFx[y])));
-          // exit(1);
           if(PInterval(-vectorU[y][0], -vectorU[y][1], (T.pheromones[j].nFx[y] - T.pheromones[i].nFx[y])) >= 0.5){
             c_up += vectorW[y][1];
             c_down += vectorW[y][0];
@@ -403,24 +360,12 @@ void intervalsPheromones(){
     T.pheromones[i].netscoreOR = 0;
     for(j = 0; j < T.nap; j++){
       if(i != j){
-        // printf("%d ", i);
-        // printf("%f ", W_concordance[i][j][0]);
-        // printf("%f ", W_concordance[i][j][1]);
         T.pheromones[i].weakOR += xSy(i, j);//Fortaleza en el modelo de Outranking
         T.pheromones[i].strictOR += xPy(j, i); //Debilidad en el modelo de Outranking
-        
-        // if(T.pheromones[i].xSy[j]){
-        //   printf("%d\n", T.pheromones[i].xSy[j]);
-        //   printf("%d\n", T.pheromones[i].xPy[j]);
-        // }
-        
-        // printf("%f ", Sigma_Array[i][j]);
-        // printf("%f ", W_concordance[i][j][1]);
       }
     }
   }
   qsort(T.pheromones, MAX_ARCHIVE_SIZE, sizeof(PHEROMONE), (int (*)(const void *, const void *))&compare_pheromone_alpha_or);
-  // printf("finish");
 }
 
 boolean xdominateyInterval(int index1, int index2){

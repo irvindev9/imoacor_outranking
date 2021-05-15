@@ -200,26 +200,6 @@ void initValues(int dm){
 		fprintf(archivo, "%f,%f\n", Epsilon[0],Epsilon[1]);
 		fprintf(archivo, "%f,%f\n", Beta[0],Beta[1]);
 		fprintf(archivo, "%f,%f\n", Lamdba[0],Lamdba[1]);
-		// Weights
-		// float partsdecimal = 1.0 / k;
-		// for(i = 0;i < k; i++){
-		// 	if(tempweight == 0){
-		// 		float value = generateRandomValue(0.0, partsdecimal);
-		// 		tempweight = partsdecimal - value;
-		// 		fprintf(archivo, "%f,", ((value-0.03 < 0) ? 0 : value-0.03));
-		// 		fprintf(archivo, "%f", (value+0.03));
-		// 	}else{
-		// 		fprintf(archivo, "%f,", ((tempweight-0.03 < 0) ? 0 : tempweight-0.03));
-		// 		fprintf(archivo, "%f", (tempweight+0.03));
-		// 		tempweight = 0;
-		// 	}
-			
-		// 	if(i == (k-1)){
-		// 		fprintf(archivo, "\n");
-		// 	}else{
-		// 		fprintf(archivo, " ");
-		// 	}
-		// }
 
 	float weights[k+1];
 	float weightsToPrint[k+1];
@@ -296,16 +276,6 @@ void initValues(int dm){
 			}
 		}
 
-		// Preveto
-		// for(i = 0;i < k; i++){
-		// 	fprintf(archivo, "%f", (vetoArray[i] + indiferenciaArray[i]) / 2);
-		// 	if(i == (k-1)){
-		// 		fprintf(archivo, "\n");
-		// 	}else{
-		// 		fprintf(archivo, " ");
-		// 	}
-		// }
-
 		fclose(archivo);
 		archivo = fopen(str, "r");
 	}
@@ -370,8 +340,6 @@ void initValues(int dm){
 		contlimiter++;
 	}
 
-	printf("[%f][", vectorU[0][0]);
-	printf("%f]", vectorU[0][1]);
 }
 
 float generateRandomValue(float a, float b) {

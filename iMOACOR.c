@@ -89,8 +89,9 @@ int main(int argc, char *argv[]){
 		for(i = 1; i <= executions; i++) {
 			Rseed = (double) rand() / RAND_MAX;
 			randomize(Rseed);
+			printf("Execution dm:%d, exec:%d of %s in %dD is running... ", j, i, Fname, k);
 			run(i, j);
-			printf("Execution dm:%d, exec:%d of %s in %dD is done!\n", j, i, Fname, k);
+			printf("is done!\n", j, i, Fname, k);
 		}
 	}
 
@@ -117,8 +118,6 @@ void run(int exec, int dm){;
 	// readVars();
 	
 	int size;	
-	printf("%d ", genCounter);
-	printf("%d ", Gmax);
 	while(genCounter < Gmax){
 		AntBasedSolutionConstruction();
 		updateRefpoints(Ants, M, k, genCounter);
@@ -133,7 +132,6 @@ void run(int exec, int dm){;
 		// printf("%d\n", genCounter);
 		intervalsPheromones();
 		// R2rankingPheromones();
-		printf("%d\n", genCounter);
 		genCounter++;		
 		// exit(1);
 		
