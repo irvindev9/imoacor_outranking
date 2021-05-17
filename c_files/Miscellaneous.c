@@ -49,14 +49,14 @@ void saveDistroWeightsPheromones(int *niche, int gen, int exec){
 void saveParetoFront(int exec, PHEROMONE *pheromones, int size, int dm){
 	FILE *arch;
 	char str[100];
-	sprintf(str, "output/original_DM%d_%s_%dD_R%d.pof", dm, Fname, k, exec);
+	sprintf(str, "output/ioaco_DM%d_%s_%dD_R%d.pof", dm, Fname, k, exec);
 	arch = fopen(str, "w");
 	if(arch == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
 		exit(-1);
 	}
 	int  i, j;
-	boolean original = TRUE; //Original IMOACOr?
+	boolean original = FALSE; //Original IMOACOr?
 	int strictOR = pheromones[0].strictOR;
 	int weakOR = pheromones[0].weakOR;
 	int netscoreOR = pheromones[0].netscoreOR;
@@ -100,14 +100,32 @@ void saveParetoFrontNewFormat(int exec, PHEROMONE *pheromones, int size){
 	}
 
 	int  i, j;
+	boolean original = FALSE; //Original IMOACOr?
+	int strictOR = pheromones[0].strictOR;
+	int weakOR = pheromones[0].weakOR;
+	int netscoreOR = pheromones[0].netscoreOR;
+
 	for(i = 0; i < size; i++){	
+		int breakline = 0;
 		for(j = 0; j < k; j++){
 			// fprintf(archivo, "%.6e", pheromones[i].Fx[j]);
-			fprintf(archivo, "%f", pheromones[i].nFx[j]);
-			if(j != k - 1)
+			if(pheromones[i].strictOR <= strictOR || original){
+				strictOR = pheromones[i].strictOR;
+				if(pheromones[i].weakOR <= weakOR || original){
+					weakOR = pheromones[i].weakOR;
+					if(pheromones[i].netscoreOR <= netscoreOR || original){
+						netscoreOR = pheromones[i].netscoreOR;
+						fprintf(archivo, "%f", pheromones[i].nFx[j]);
+						breakline = 1;
+					}
+				}
+			}
+
+			if(j != k - 1 && breakline)
 				fprintf(archivo, " ");
 		}
-		fprintf(archivo, "\n");
+		if(breakline)
+			fprintf(archivo, "\n");
 	}
 	fclose(archivo);
 }

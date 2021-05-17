@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 
   	int i,j;
   	// Execution of the algorithm varying the seed of the random number generator.
-	int dm = 1; // 10 desition makers
+	int dm = 10; // 10 desition makers
 
 	for(j = 1; j <= dm; j++){
 		for(i = 1; i <= executions; i++) {
@@ -100,8 +100,8 @@ void run(int exec, int dm){;
 	// Normalize objective vectors
 	normalizeObjFuncs(MAX_ARCHIVE_SIZE, _PHE_TYPE_);	
 	// Apply R2ranking to the pheromones
-	R2rankingPheromones();
-	// initValues(dm);
+	// R2rankingPheromones();
+	initValues(dm);
 	// readVars();
 	
 	int size;	
@@ -111,11 +111,11 @@ void run(int exec, int dm){;
 		Union(); // Las hormigas son las que guardan la solución
 		size = M + T.nap;	
 		normalizeObjFuncs(size, _ANTS_TYPE_);			
-		R2ranking(size);
-		// ORankingAnts(size);
+		// R2ranking(size);
+		ORankingAnts(size);
 		PheromoneUpdate(size);
-		// ORankingPheromones(size);
-		R2rankingPheromones();
+		ORankingPheromones(size);
+		// R2rankingPheromones();
 		genCounter++;		
 	}
 
