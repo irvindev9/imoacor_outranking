@@ -131,7 +131,6 @@ void run(int exec, int dm){;
 	}
 
 
-	ORankingPheromones(size);
 	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);
 	saveParetoFront(exec, T.pheromones, T.nap, dm);
 	// saveParetoSet(exec, T.pheromones, T.nap);
