@@ -636,3 +636,303 @@ void outrankingFromFile(){
 		fclose(outresults);
 	}
 }
+
+void manhattanChebyshev(){
+
+	FILE *arch2;
+	// arch = fopen("output/globaldeprueba.txt", "r");
+	char str[100];
+	sprintf(str, "output/resultsDManAvg.csv");
+	arch2 = fopen(str, "w");
+	if(arch2 == NULL){
+		printf("Error! The file couldn't be created\n");
+		exit(-1);
+	}
+
+	fprintf(arch2, "IO-ACO, iMOACOR\n");	
+
+	fclose(arch2);
+
+	sprintf(str, "output/resultsDManMin.csv");
+	arch2 = fopen(str, "w");
+	if(arch2 == NULL){
+		printf("Error! The file couldn't be created\n");
+		exit(-1);
+	}
+
+	fprintf(arch2, "IO-ACO, iMOACOR\n");	
+
+	fclose(arch2);
+
+	sprintf(str, "output/resultsDChebAvg.csv");
+	arch2 = fopen(str, "w");
+	if(arch2 == NULL){
+		printf("Error! The file couldn't be created\n");
+		exit(-1);
+	}
+
+	fprintf(arch2, "IO-ACO, iMOACOR\n");	
+
+	fclose(arch2);
+
+	sprintf(str, "output/resultsDChebMin.csv");
+	arch2 = fopen(str, "w");
+	if(arch2 == NULL){
+		printf("Error! The file couldn't be created\n");
+		exit(-1);
+	}
+
+	fprintf(arch2, "IO-ACO, iMOACOR\n");	
+
+	fclose(arch2);
+
+	int dmfile = 1;
+
+	for(dmfile = 1; dmfile <= 10; dmfile++){
+		// initValues(dmfile);
+
+		FILE *arch;
+		// arch = fopen("output/globaldeprueba.txt", "r");
+		char str[100];
+		sprintf(str, "output/DM%d.txt", dmfile);
+		arch = fopen(str, "r");
+		if(arch == NULL){
+			printf("Error! The file %s couldn't be created\n", str);
+			exit(-1);
+		}
+		char line[5000];
+		int contlimiter = 0;
+
+		int i, j;
+		int size_of_file_best = 0;
+		float best_solution[10];
+
+		while( fgets(line,5000,arch) ) {
+			int init_size = strlen(line);
+			char delim[] = " ";
+			char *ptr = strtok(line, delim);
+			int cont_in = 0;
+			while(ptr != NULL)
+			{
+				if(size_of_file_best == 0){
+					float val = atof(ptr);
+					best_solution[cont_in] = val;
+				}
+				
+
+				ptr = strtok(NULL, delim);
+				cont_in++;
+			}
+			size_of_file_best++;
+		}
+
+		// printf("File: %s ...\n", str);
+		// printf("Size: %f ...\n", best_solution[9]);
+
+		fclose(arch);
+
+		int run = 1;
+
+		for(run = 1; run <= 30; run++){
+
+			sprintf(str, "output/ioaco_DM%d_%s_%dD_R%d.pof", dmfile, Fname, k, run);
+			arch = fopen(str, "r");
+			if(arch == NULL){
+				printf("Error! The file %s couldn't be created\n", str);
+				exit(-1);
+			}
+			
+			int size_of_file_ioaco = 0;
+
+			while( fgets(line,5000,arch) ) {
+				int init_size = strlen(line);
+				char delim[] = " ";
+				char *ptr = strtok(line, delim);
+				int cont_in = 0;
+				while(ptr != NULL)
+				{
+					float val = atof(ptr);
+					Ants[size_of_file_ioaco].nFx[cont_in] = val;
+
+					ptr = strtok(NULL, delim);
+					cont_in++;
+				}
+				size_of_file_ioaco++;
+			}
+
+			// printf("File: %s ...\n", str);
+			// printf("Size: %f ...\n", Ants[0].nFx[9]);
+
+			fclose(arch);
+
+			sprintf(str, "output/original_DM1_%s_%dD_R%d.pof", Fname, k, run);
+			arch = fopen(str, "r");
+			if(arch == NULL){
+				printf("Error! The file %s couldn't be created\n", str);
+				exit(-1);
+			}
+			
+			int size_of_file_original = 0;
+
+			while( fgets(line,5000,arch) ) {
+				int init_size = strlen(line);
+				char delim[] = " ";
+				char *ptr = strtok(line, delim);
+				int cont_in = 0;
+				while(ptr != NULL)
+				{
+					float val = atof(ptr);
+					T.pheromones[size_of_file_original].nFx[cont_in] = val;
+
+					ptr = strtok(NULL, delim);
+					cont_in++;
+				}
+				size_of_file_original++;
+			}
+
+			// printf("File: %s ...\n", str);
+			// printf("Size: %f ...\n", T.pheromones[0].nFx[9]);
+
+			fclose(arch);
+
+			printf("Saved finished!!! \nContinue with metrics...\n");
+
+			//IOACO
+
+			float min_man = 9999999;
+			float avg_man = 0;
+			
+
+			for(i = 0; i < size_of_file_ioaco; i++){
+				float total = 0;
+				for(j = 0; j < k; j++){
+					// printf("min_man: %f ...\n", (Ants[i].nFx[j] - best_solution[j]));
+					total += (Ants[i].nFx[j] > best_solution[j]) ? (Ants[i].nFx[j] - best_solution[j]) : 0;
+				}
+
+				total = sqrt(total);
+
+				min_man = (min_man > total) ? total : min_man;
+
+				avg_man += total;
+			}
+
+			avg_man = avg_man / size_of_file_ioaco;
+
+			// IMOACOR
+
+			float min_man_original = 9999999;
+			float avg_man_original = 0;
+			
+
+			for(i = 0; i < size_of_file_original; i++){
+				float total = 0;
+				for(j = 0; j < k; j++){
+					// printf("min_man_original: %f ...\n", (T.pheromones[i].nFx[j] - best_solution[j]));
+					total += (T.pheromones[i].nFx[j] > best_solution[j]) ? (T.pheromones[i].nFx[j] - best_solution[j]) : 0;
+				}
+
+				total = sqrt(total);
+
+				min_man_original = (min_man_original > total) ? total : min_man_original;
+
+				avg_man_original += total;
+			}
+
+			avg_man_original = avg_man_original / size_of_file_original;
+
+			// printf("min_man_original: %f ...\n", min_man_original);
+			// printf("avg_man_original: %f ...\n", avg_man_original);
+
+			sprintf(str, "output/resultsDManAvg.csv");
+			arch2 = fopen(str, "a");
+			if(arch2 == NULL){
+				printf("Error! The file couldn't be created\n");
+				exit(-1);
+			}
+
+			fprintf(arch2, "%f, %f\n", avg_man, avg_man_original);	
+
+			fclose(arch2);
+
+			sprintf(str, "output/resultsDManMin.csv");
+			arch2 = fopen(str, "a");
+			if(arch2 == NULL){
+				printf("Error! The file couldn't be created\n");
+				exit(-1);
+			}
+
+			fprintf(arch2, "%f, %f\n", min_man, min_man_original);	
+
+			fclose(arch2);
+
+			//IOACO
+
+			float min_cheb = 9999999;
+			float avg_cheb = 0;
+			
+
+			for(i = 0; i < size_of_file_ioaco; i++){
+				float total = 0;
+				for(j = 0; j < k; j++){
+					if((Ants[i].nFx[j] > best_solution[j]) && (Ants[i].nFx[j] - best_solution[j]) > total){
+						total = Ants[i].nFx[j] - best_solution[j];
+					}
+				}
+
+				min_cheb = (min_cheb > total) ? total : min_cheb;
+
+				avg_cheb += total;
+			}
+
+			avg_cheb = avg_cheb / size_of_file_ioaco;
+
+			//IMOACOR
+
+			float min_cheb_original = 9999999;
+			float avg_cheb_original = 0;
+			
+
+			for(i = 0; i < size_of_file_original; i++){
+				float total = 0;
+				total = T.pheromones[i].nFx[0] - best_solution[0];
+				for(j = 0; j < k; j++){
+					if((T.pheromones[i].nFx[j] > best_solution[j]) && (T.pheromones[i].nFx[j] - best_solution[j]) > total){
+						total = T.pheromones[i].nFx[j] - best_solution[j];
+					}
+				}
+
+				min_cheb_original = (min_cheb_original > total) ? total : min_cheb_original;
+
+				avg_cheb_original += total;
+			}
+
+			avg_cheb_original = avg_cheb_original / size_of_file_original;
+
+			sprintf(str, "output/resultsDChebAvg.csv");
+			arch2 = fopen(str, "a");
+			if(arch2 == NULL){
+				printf("Error! The file couldn't be created\n");
+				exit(-1);
+			}
+
+			fprintf(arch2, "%f, %f\n", avg_cheb, avg_cheb_original);	
+
+			fclose(arch2);
+
+			sprintf(str, "output/resultsDChebMin.csv");
+			arch2 = fopen(str, "a");
+			if(arch2 == NULL){
+				printf("Error! The file couldn't be created\n");
+				exit(-1);
+			}
+
+			fprintf(arch2, "%f, %f\n", min_cheb, min_cheb_original);	
+
+			fclose(arch2);
+
+			printf("RUN#: %d\n", run);
+		}
+
+	}
+}

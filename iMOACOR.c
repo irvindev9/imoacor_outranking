@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
 	// MAX_ARCHIVE_SIZE = M = N;
 	MAX_ARCHIVE_SIZE = M = 1;
 	// DATA_Size = 10000;
-	DATA_Size = 72600;
+	DATA_Size = 6900;
 
 	
 
@@ -74,7 +74,8 @@ int main(int argc, char *argv[]){
 	init_Weight_Vectors(WV, H, k);
 
 	
-	outrankingFromFile();
+	manhattanChebyshev();
+	// outrankingFromFile();
 	free_param();
 	free_Memory();
 	exit(1);
@@ -129,6 +130,8 @@ void run(int exec, int dm){;
 		genCounter++;		
 	}
 
+
+	ORankingPheromones(size);
 	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);
 	saveParetoFront(exec, T.pheromones, T.nap, dm);
 	// saveParetoSet(exec, T.pheromones, T.nap);
