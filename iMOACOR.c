@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 
   	int i,j;
   	// Execution of the algorithm varying the seed of the random number generator.
-	int dm = 10; // 10 desition makers
+	int dm = 1; // 10 desition makers
 
 	for(j = 1; j <= dm; j++){
 		for(i = 1; i <= executions; i++) {
@@ -100,7 +100,7 @@ void run(int exec, int dm){;
 	// Normalize objective vectors
 	normalizeObjFuncs(MAX_ARCHIVE_SIZE, _PHE_TYPE_);	
 	// Apply R2ranking to the pheromones
-	// R2rankingPheromones();
+	R2rankingPheromones();
 	initValues(dm);
 	// readVars();
 	
@@ -111,14 +111,21 @@ void run(int exec, int dm){;
 		Union(); // Las hormigas son las que guardan la solución
 		size = M + T.nap;	
 		normalizeObjFuncs(size, _ANTS_TYPE_);			
-		// R2ranking(size);
-		ORankingAnts(size);
+		R2ranking(size);
+		// ORankingAnts(size);
 		PheromoneUpdate(size);
-		ORankingPheromones(size);
-		// R2rankingPheromones();
+		// ORankingPheromones(size);
+		R2rankingPheromones();
 		genCounter++;		
 	}
 
+	// printf("%f \n", T.pheromones[0].nFx[0]);
+	
+	ORankingAnts(size);
+	PheromoneUpdate(size);
+	ORankingPheromones(size);
+
+	// printf("%f \n", T.pheromones[0].netscoreOR);
 	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);
 	saveParetoFront(exec, T.pheromones, T.nap, dm);
 	// saveParetoSet(exec, T.pheromones, T.nap);

@@ -49,7 +49,7 @@ void saveDistroWeightsPheromones(int *niche, int gen, int exec){
 void saveParetoFront(int exec, PHEROMONE *pheromones, int size, int dm){
 	FILE *arch;
 	char str[100];
-	sprintf(str, "output/ioaco_DM%d_%s_%dD_R%d.pof", dm, Fname, k, exec);
+	sprintf(str, "output/original_DM%d_%s_%dD_R%d.pof", dm, Fname, k, exec);
 	arch = fopen(str, "w");
 	if(arch == NULL){
 		printf("Error! The file %s couldn't be created\n", str);
@@ -60,6 +60,8 @@ void saveParetoFront(int exec, PHEROMONE *pheromones, int size, int dm){
 	int strictOR = pheromones[0].strictOR;
 	int weakOR = pheromones[0].weakOR;
 	int netscoreOR = pheromones[0].netscoreOR;
+
+	// printf("%d <- \n", pheromones[0].netscoreOR);
 
 	// fprintf(arch, "# %d %d\n", k, size);	
 	for(i = 0; i < size; i++){	
