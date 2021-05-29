@@ -532,7 +532,7 @@ void outrankingFromFile(){
 
 		FILE *arch;
 		// arch = fopen("output/globaldeprueba.txt", "r");
-		arch = fopen("output/Globalwithoutduplicates7.txt", "r");
+		arch = fopen("output/Globalwithoutduplicates3.txt", "r");
 		if(arch == NULL){
 			printf("Error! The file couldn't be created\n");
 			exit(-1);

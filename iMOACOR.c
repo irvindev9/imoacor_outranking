@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
 	// MAX_ARCHIVE_SIZE = M = N;
 	MAX_ARCHIVE_SIZE = M = 1;
 	// DATA_Size = 10000;
-	DATA_Size = 6900;
+	DATA_Size = 330;
 
 	
 
