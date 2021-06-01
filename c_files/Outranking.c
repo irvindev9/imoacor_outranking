@@ -527,12 +527,12 @@ void outrankingFromFile(){
 
 	int dmfile = 1;
 
-	for(dmfile = 1; dmfile <= 10; dmfile++){
+	for(dmfile = 1; dmfile <= 1; dmfile++){
 		initValues(dmfile);
 
 		FILE *arch;
-		// arch = fopen("output/globaldeprueba.txt", "r");
-		arch = fopen("output/Globalwithoutduplicates3.txt", "r");
+		// arch = fopen("output/globalDTLZ5.txt", "r");
+		arch = fopen("output/Globalwithoutduplicates5.txt", "r");
 		if(arch == NULL){
 			printf("Error! The file couldn't be created\n");
 			exit(-1);
@@ -645,7 +645,7 @@ void manhattanChebyshev(){
 	sprintf(str, "output/resultsDManAvg.csv");
 	arch2 = fopen(str, "w");
 	if(arch2 == NULL){
-		printf("Error! The file couldn't be created\n");
+		printf("Errorm12! The file couldn't be created\n");
 		exit(-1);
 	}
 
@@ -656,7 +656,7 @@ void manhattanChebyshev(){
 	sprintf(str, "output/resultsDManMin.csv");
 	arch2 = fopen(str, "w");
 	if(arch2 == NULL){
-		printf("Error! The file couldn't be created\n");
+		printf("Errorm2! The file couldn't be created\n");
 		exit(-1);
 	}
 
@@ -667,7 +667,7 @@ void manhattanChebyshev(){
 	sprintf(str, "output/resultsDChebAvg.csv");
 	arch2 = fopen(str, "w");
 	if(arch2 == NULL){
-		printf("Error! The file couldn't be created\n");
+		printf("Errorm3! The file couldn't be created\n");
 		exit(-1);
 	}
 
@@ -678,7 +678,7 @@ void manhattanChebyshev(){
 	sprintf(str, "output/resultsDChebMin.csv");
 	arch2 = fopen(str, "w");
 	if(arch2 == NULL){
-		printf("Error! The file couldn't be created\n");
+		printf("Errorm4! The file couldn't be created\n");
 		exit(-1);
 	}
 
@@ -847,7 +847,7 @@ void manhattanChebyshev(){
 			sprintf(str, "output/resultsDManAvg.csv");
 			arch2 = fopen(str, "a");
 			if(arch2 == NULL){
-				printf("Error! The file couldn't be created\n");
+				printf("Errorm5! The file couldn't be created\n");
 				exit(-1);
 			}
 
@@ -858,7 +858,7 @@ void manhattanChebyshev(){
 			sprintf(str, "output/resultsDManMin.csv");
 			arch2 = fopen(str, "a");
 			if(arch2 == NULL){
-				printf("Error! The file couldn't be created\n");
+				printf("Errorm6! The file couldn't be created\n");
 				exit(-1);
 			}
 
@@ -912,7 +912,7 @@ void manhattanChebyshev(){
 			sprintf(str, "output/resultsDChebAvg.csv");
 			arch2 = fopen(str, "a");
 			if(arch2 == NULL){
-				printf("Error! The file couldn't be created\n");
+				printf("Errorm7! The file couldn't be created\n");
 				exit(-1);
 			}
 
@@ -923,7 +923,7 @@ void manhattanChebyshev(){
 			sprintf(str, "output/resultsDChebMin.csv");
 			arch2 = fopen(str, "a");
 			if(arch2 == NULL){
-				printf("Error! The file couldn't be created\n");
+				printf("Errorm8! The file couldn't be created\n");
 				exit(-1);
 			}
 
