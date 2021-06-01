@@ -726,8 +726,8 @@ void manhattanChebyshev(){
 			size_of_file_best++;
 		}
 
-		// printf("File: %s ...\n", str);
-		// printf("Size: %f ...\n", best_solution[9]);
+		printf("File: %s ...\n", str);
+		printf("Size: %f ...\n", best_solution[9]);
 
 		fclose(arch);
 
@@ -806,11 +806,11 @@ void manhattanChebyshev(){
 			for(i = 0; i < size_of_file_ioaco; i++){
 				float total = 0;
 				for(j = 0; j < k; j++){
-					// printf("min_man: %f ...\n", (Ants[i].nFx[j] - best_solution[j]));
+					printf("min_man: %f ...\n", (Ants[i].nFx[j] - best_solution[j]));
 					total += (Ants[i].nFx[j] > best_solution[j]) ? (Ants[i].nFx[j] - best_solution[j]) : 0;
 				}
 
-				total = sqrt(total);
+				// total = sqrt(total);
 
 				min_man = (min_man > total) ? total : min_man;
 
@@ -832,7 +832,7 @@ void manhattanChebyshev(){
 					total += (T.pheromones[i].nFx[j] > best_solution[j]) ? (T.pheromones[i].nFx[j] - best_solution[j]) : 0;
 				}
 
-				total = sqrt(total);
+				// total = sqrt(total);
 
 				min_man_original = (min_man_original > total) ? total : min_man_original;
 
