@@ -274,7 +274,7 @@ float concordance(int index1, int index2){
 		boolean xIky;
 		boolean xPky;
 
-		xIky = abs(T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i]) <= vectorU[i];
+		xIky = abs(T.pheromones[index2].nFx[i] - T.pheromones[index1].nFx[i]) <= vectorU[i];
 
 		xPky = T.pheromones[index1].nFx[i] < T.pheromones[index2].nFx[i] && !(xIky);
 
@@ -295,7 +295,7 @@ float discordance(int index1, int index2){
 	for(i = 0;i < k;i++){
 		float result = 0;
 
-		float dis = T.pheromones[index1].nFx[i] - T.pheromones[index2].nFx[i];
+		float dis = T.pheromones[index2].nFx[i] - T.pheromones[index1].nFx[i];
 
 		if(dis < vectorS[i]){
 			result = 0;
@@ -453,7 +453,7 @@ float concordanceAnts(int index1, int index2){
 		boolean xIky;
 		boolean xPky;
 
-		xIky = abs(Ants[index1].nFx[i] - Ants[index2].nFx[i]) <= vectorU[i];
+		xIky = abs(Ants[index2].nFx[i] - Ants[index1].nFx[i]) <= vectorU[i];
 
 		xPky = Ants[index1].nFx[i] < Ants[index2].nFx[i] && !(xIky);
 
@@ -472,7 +472,7 @@ float discordanceAnts(int index1, int index2){
 	for(i = 0;i < k;i++){
 		float result = 0;
 
-		float dis = Ants[index1].nFx[i] - Ants[index2].nFx[i];
+		float dis = Ants[index2].nFx[i] - Ants[index1].nFx[i];
 
 		if(dis < vectorS[i]){
 			result = 0;
