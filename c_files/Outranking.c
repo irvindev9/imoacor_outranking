@@ -527,7 +527,7 @@ void outrankingFromFile(){
 
 	int dmfile = 1;
 
-	for(dmfile = 1; dmfile <= 1; dmfile++){
+	for(dmfile = 1; dmfile <= 10; dmfile++){
 		initValues(dmfile);
 
 		FILE *arch;
