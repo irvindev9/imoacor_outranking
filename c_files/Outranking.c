@@ -532,7 +532,7 @@ void outrankingFromFile(){
 
 		FILE *arch;
 		// arch = fopen("output/globalDTLZ5.txt", "r");
-		arch = fopen("output/Globalwithoutduplicates5.txt", "r");
+		arch = fopen("output/Globalwithoutduplicates6.txt", "r");
 		if(arch == NULL){
 			printf("Error! The file couldn't be created\n");
 			exit(-1);
@@ -895,7 +895,7 @@ void manhattanChebyshev(){
 
 			for(i = 0; i < size_of_file_original; i++){
 				float total = 0;
-				total = T.pheromones[i].nFx[0] - best_solution[0];
+				// total = T.pheromones[i].nFx[0] - best_solution[0];
 				for(j = 0; j < k; j++){
 					if((T.pheromones[i].nFx[j] > best_solution[j]) && (T.pheromones[i].nFx[j] - best_solution[j]) > total){
 						total = T.pheromones[i].nFx[j] - best_solution[j];
