@@ -56,7 +56,7 @@ void saveParetoFront(int exec, PHEROMONE *pheromones, int size, int dm){
 		exit(-1);
 	}
 	int  i, j;
-	boolean original = FALSE; //Original IMOACOr?
+	boolean original = TRUE; //Original IMOACOr?
 	int strictOR = pheromones[0].strictOR;
 	int weakOR = pheromones[0].weakOR;
 	int netscoreOR = pheromones[0].netscoreOR;
@@ -64,7 +64,7 @@ void saveParetoFront(int exec, PHEROMONE *pheromones, int size, int dm){
 	// printf("%d <- \n", pheromones[0].netscoreOR);
 
 	// fprintf(arch, "# %d %d\n", k, size);	
-	for(i = 0; i < size; i++){	
+	for(i = 0; i < 1; i++){	
 		int breakline = 0;
 		for(j = 0; j < k; j++){
 			if(pheromones[i].strictOR <= strictOR || original){
@@ -102,12 +102,12 @@ void saveParetoFrontNewFormat(int exec, PHEROMONE *pheromones, int size){
 	}
 
 	int  i, j;
-	boolean original = FALSE; //Original IMOACOr?
+	boolean original = TRUE; //Original IMOACOr?
 	int strictOR = pheromones[0].strictOR;
 	int weakOR = pheromones[0].weakOR;
 	int netscoreOR = pheromones[0].netscoreOR;
 
-	for(i = 0; i < size; i++){	
+	for(i = 0; i < 1; i++){	
 		int breakline = 0;
 		for(j = 0; j < k; j++){
 			// fprintf(archivo, "%.6e", pheromones[i].Fx[j]);

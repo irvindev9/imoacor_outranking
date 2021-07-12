@@ -121,9 +121,9 @@ void run(int exec, int dm){;
 
 	// printf("%f \n", T.pheromones[0].nFx[0]);
 	
-	ORankingAnts(size);
-	PheromoneUpdate(size);
-	ORankingPheromones(size);
+	// ORankingAnts(size);
+	// PheromoneUpdate(size);
+	// ORankingPheromones(size);
 
 	// printf("%f \n", T.pheromones[0].netscoreOR);
 	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);
