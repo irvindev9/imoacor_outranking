@@ -49,6 +49,7 @@ int compare_ant_alpha_or(const void *p1, const void *p2){
 	return 0;
 }
 
+// Sort by pheromone strength.
 int compare_pheromone_alpha_or(const void *p1, const void *p2){
 	PHEROMONE *a, *b;
 	double anorm, bnorm;

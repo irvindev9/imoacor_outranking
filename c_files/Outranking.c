@@ -9,8 +9,6 @@ float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
 float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
 float valueV = 0.2; // 0.2 a 0.3 > 0.10 y 0.20
 
-// Restar los valores en ese objetivo y dividirlos sobre el valor de ese parametro en sigma
-
 // Preferences dictionary
 // 1 = Strict preference
 // 2 = Indifference
@@ -61,6 +59,8 @@ void readVars(){
 	
 }
 
+//Outranking Pheromones Function 
+// size = number of options
 void ORankingPheromones(int size){
 	int i, j;
 
@@ -127,6 +127,7 @@ void ORankingPheromones(int size){
 		T.pheromones[i].netscoreOR = (int)frontierArray[i][2];
 	}
 	
+	// Sort the indices from the highest to the lowest
 	qsort(T.pheromones, MAX_ARCHIVE_SIZE, sizeof(PHEROMONE), (int (*)(const void *, const void *))&compare_pheromone_alpha_or);
 
 	for(i = 0; i < T.nap; i++){	
@@ -137,6 +138,8 @@ void ORankingPheromones(int size){
 
 }
 
+
+// Function to initialize the outranking values
 void initValues(int dm){
 	int i, j;
 
@@ -258,6 +261,7 @@ void initValues(int dm){
 	}
 }
 
+// generar valores aleatorios para los pesos
 float generateRandomValue(float a, float b) {
     float random = ((float) rand()) / (float) RAND_MAX;
     float diff = b - a;
@@ -265,6 +269,9 @@ float generateRandomValue(float a, float b) {
     return a + r;
 }
 
+// Calculate the concordance index
+// index1 = concordance index of the first option
+// index2 = concordance index of the second option
 float concordance(int index1, int index2){
 	// c(x1, x2) = c1(x1, x2) + c2(x1, x2) + c3(x1, x2) + ...
 	float total = 0;
@@ -286,6 +293,9 @@ float concordance(int index1, int index2){
 	return total;
 }
 
+// Calculate the index of discordance
+// index1 = discordance index of the first option
+// index2 = discordance index of the second option
 float discordance(int index1, int index2){
 	// d(x1, x2) = min{1-d1(x1, x2), 1-d2(x1, x2), 1-d3(x1, x2), ... }
 
@@ -349,6 +359,9 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 	return result;
 }
 
+// Calculate if x dominates y
+// index1 = first option index
+// index2 = second option index
 boolean xdominatey(int index1, int index2){
 	int atleastone = 0;
 	int minlimit = 0;
@@ -370,6 +383,7 @@ boolean xdominatey(int index1, int index2){
 	}
 }
 
+// Outranking of ants
 void ORankingAnts(int size){
 	int i, j;
 
@@ -445,6 +459,7 @@ void ORankingAnts(int size){
 	fclose(arch);
 }
 
+// Concordance between ants
 float concordanceAnts(int index1, int index2){
 	float total = 0;
 	int i;
@@ -465,6 +480,7 @@ float concordanceAnts(int index1, int index2){
 	return total;
 }
 
+// Discordance between ants
 float discordanceAnts(int index1, int index2){
 	float min_value = 1;
 	int i;
@@ -492,6 +508,7 @@ float discordanceAnts(int index1, int index2){
 	return min_value;
 }
 
+// Preference between ants
 boolean xdominateyAnts(int index1, int index2){
 	int atleastone = 0;
 	int minlimit = 0;

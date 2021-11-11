@@ -9,7 +9,7 @@
 #include "headers/Parameter.h"
 #include "headers/AntOperations.h"
 
-void run(int, int);
+void run(int, int, int);
 
 int main(int argc, char *argv[]){
 
@@ -71,13 +71,29 @@ int main(int argc, char *argv[]){
 
   	int i,j;
   	// Execution of the algorithm varying the seed of the random number generator.
-	int dm = 1; // 10 desition makers
+	int dm = 10; // 10 desition makers
 
 	for(j = 1; j <= dm; j++){
 		for(i = 1; i <= executions; i++) {
 			Rseed = (double) rand() / RAND_MAX;
 			randomize(Rseed);
-			run(i, j);
+			run(i, j, 1);
+			printf("Execution dm:%d, exec:%d of %s in %dD is done!\n", j, i, Fname, k);
+		}
+	}
+
+ 	// if(strncmp(Fname, "WFG", 3) == 0)
+ 	// 	free_WFG();
+	// free_param();
+	// free_Memory();
+
+	dm = 1; // 10 desition makers
+
+	for(j = 1; j <= dm; j++){
+		for(i = 1; i <= executions; i++) {
+			Rseed = (double) rand() / RAND_MAX;
+			randomize(Rseed);
+			run(i, j, 2);
 			printf("Execution dm:%d, exec:%d of %s in %dD is done!\n", j, i, Fname, k);
 		}
 	}
@@ -89,7 +105,7 @@ int main(int argc, char *argv[]){
 	return 1;
 }
 
-void run(int exec, int dm){;
+void run(int exec, int dm, int filename){;
 	genCounter = 0;
 	// Generate randomly initial solutions
 	initPheromones();
@@ -108,25 +124,22 @@ void run(int exec, int dm){;
 	while(genCounter < Gmax){
 		AntBasedSolutionConstruction();
 		updateRefpoints(Ants, M, k, genCounter);
-		Union(); // Las hormigas son las que guardan la solución
+		Union(); // The ants are the ones that save the solution
 		size = M + T.nap;	
 		normalizeObjFuncs(size, _ANTS_TYPE_);			
-		R2ranking(size);
-		// ORankingAnts(size);
-		PheromoneUpdate(size);
-		// ORankingPheromones(size);
+		R2ranking(size); // R2ranking
+		// ORankingAnts(size); // Outranking ants
+		PheromoneUpdate(size); // Pheromone update
+		// ORankingPheromones(size); // Outranking pheromones
 		R2rankingPheromones();
 		genCounter++;		
 	}
 
-	// printf("%f \n", T.pheromones[0].nFx[0]);
-	
 	// ORankingAnts(size);
 	// PheromoneUpdate(size);
 	// ORankingPheromones(size);
 
-	// printf("%f \n", T.pheromones[0].netscoreOR);
 	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);
-	saveParetoFront(exec, T.pheromones, T.nap, dm);
+	saveParetoFront(exec, T.pheromones, T.nap, dm, filename);
 	// saveParetoSet(exec, T.pheromones, T.nap);
 }
