@@ -9,7 +9,7 @@ float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
 float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
 float valueV = 0.2; // 0.2 a 0.3 > 0.10 y 0.20
 
-// Restar los valores en ese objetivo y dividirlos sobre el valor de ese parametro en sigma
+// Subtract the values in that target and divide them over the value of that parameter in sigma
 
 // Preferences dictionary
 // 1 = Strict preference
@@ -137,6 +137,7 @@ void ORankingPheromones(int size){
 
 }
 
+// Initialize Outranking Configuration
 void initValues(int dm){
 	int i, j;
 
@@ -154,17 +155,6 @@ void initValues(int dm){
 		fprintf(archivo, "%f\n", Epsilon);
 		fprintf(archivo, "%f\n", Beta);
 		fprintf(archivo, "%f\n", Lamdba);
-		// Weights
-		// fprintf(archivo, "%f ", 0.05);
-		// fprintf(archivo, "%f ", 0.04);
-		// fprintf(archivo, "%f ", 0.01);
-		// fprintf(archivo, "%f ", 0.2);
-		// fprintf(archivo, "%f ", 0.05);
-		// fprintf(archivo, "%f ", 0.05);
-		// fprintf(archivo, "%f ", 0.01);
-		// fprintf(archivo, "%f ", 0.09);
-		// fprintf(archivo, "%f ", 0.35);
-		// fprintf(archivo, "%f\n", 0.15);
 
 		for(i = 0;i < k; i++){
 			if(tempweight == 0){
@@ -258,6 +248,7 @@ void initValues(int dm){
 	}
 }
 
+// Function to generate random values between a range
 float generateRandomValue(float a, float b) {
     float random = ((float) rand()) / (float) RAND_MAX;
     float diff = b - a;
@@ -265,6 +256,7 @@ float generateRandomValue(float a, float b) {
     return a + r;
 }
 
+// Calculate concordance of two vectors
 float concordance(int index1, int index2){
 	// c(x1, x2) = c1(x1, x2) + c2(x1, x2) + c3(x1, x2) + ...
 	float total = 0;
@@ -286,6 +278,7 @@ float concordance(int index1, int index2){
 	return total;
 }
 
+// Calculate discordance of two vectors
 float discordance(int index1, int index2){
 	// d(x1, x2) = min{1-d1(x1, x2), 1-d2(x1, x2), 1-d3(x1, x2), ... }
 
@@ -315,6 +308,7 @@ float discordance(int index1, int index2){
 	return min_value;
 }
 
+// Select preference of two vectors (by sigma)
 float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 	float result = 0;
 
@@ -349,6 +343,7 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 	return result;
 }
 
+// Say if x dominate y (two vectors)
 boolean xdominatey(int index1, int index2){
 	int atleastone = 0;
 	int minlimit = 0;
@@ -370,6 +365,7 @@ boolean xdominatey(int index1, int index2){
 	}
 }
 
+// Calculate Outranking (Ants)
 void ORankingAnts(int size){
 	int i, j;
 
@@ -400,17 +396,17 @@ void ORankingAnts(int size){
 			if(i != j){
 				preferencesArray[i][j] = preferenceIdentifier(sigmaArray[i][j], sigmaArray[j][i], xdominateyAnts(i, j));
 
-				// Estrictamente dominada
+				// Strictly dominated
 				if(preferencesArray[i][j] == 1){
 					frontierArray[i][0] += 1;
 				}
 
-				// Debilmente dominadas / k-preferencia
+				// Weak dominated / k-preference
 				if(preferencesArray[i][j] == 3 || preferencesArray[i][j] == 5){
 					frontierArray[i][1] += 1;
 				}
 
-				//Flujo neto
+				// Net score
 				if(netscore[j] > netscore[i]){
 					frontierArray[i][2] += 1;
 				}

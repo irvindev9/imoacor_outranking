@@ -13,9 +13,6 @@ void run(int, int);
 
 int main(int argc, char *argv[]){
 
-	// outrankingFromFile();
-	// exit(1);
-
 	if(argc != 2 && argc != 3) {
 		printf("Syntax: ./imoacor parameter_file_name [#runs]\n");
     	exit(1);
@@ -69,9 +66,9 @@ int main(int argc, char *argv[]){
   	// Initialize weight vectors
 	init_Weight_Vectors(WV, H, k);
 
-  	int i,j;
+	int i,j;
   	// Execution of the algorithm varying the seed of the random number generator.
-	int dm = 1; // 10 desition makers
+	int dm = 10; // 10 decision makers
 
 	for(j = 1; j <= dm; j++){
 		for(i = 1; i <= executions; i++) {
@@ -101,32 +98,28 @@ void run(int exec, int dm){;
 	normalizeObjFuncs(MAX_ARCHIVE_SIZE, _PHE_TYPE_);	
 	// Apply R2ranking to the pheromones
 	R2rankingPheromones();
+	// Values of outranking configuration
 	initValues(dm);
 	// readVars();
 	
 	int size;	
-	while(genCounter < Gmax){
+	while(genCounter < Gmax){ // Number of iterations
 		AntBasedSolutionConstruction();
 		updateRefpoints(Ants, M, k, genCounter);
-		Union(); // Las hormigas son las que guardan la solución
+		Union(); // Ants save the solution
 		size = M + T.nap;	
-		normalizeObjFuncs(size, _ANTS_TYPE_);			
-		R2ranking(size);
-		// ORankingAnts(size);
-		PheromoneUpdate(size);
-		// ORankingPheromones(size);
-		R2rankingPheromones();
+		normalizeObjFuncs(size, _ANTS_TYPE_);	 // Normalize objective vectors
+
+		ORankingAnts(size); // Outranking of Ants
+
+		PheromoneUpdate(size); // Update pheromones
+
+		ORankingPheromones(size); // Outranking of Pheromones
+
 		genCounter++;		
 	}
 
-	// printf("%f \n", T.pheromones[0].nFx[0]);
-	
-	// ORankingAnts(size);
-	// PheromoneUpdate(size);
-	// ORankingPheromones(size);
-
-	// printf("%f \n", T.pheromones[0].netscoreOR);
-	saveParetoFrontNewFormat(exec, T.pheromones, T.nap);
+	// Print the pareto front in file
+	saveParetoFrontNewFormat(exec, T.pheromones, T.nap); 
 	saveParetoFront(exec, T.pheromones, T.nap, dm);
-	// saveParetoSet(exec, T.pheromones, T.nap);
 }
