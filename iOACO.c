@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 	return 1;
 }
 
-void run(int exec, int dm){;
+void run(int exec, int dm){
 	genCounter = 0;
 	// Generate randomly initial solutions
 	initPheromones();

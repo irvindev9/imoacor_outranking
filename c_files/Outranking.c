@@ -441,6 +441,12 @@ void ORankingAnts(int size){
 	fclose(arch);
 }
 
+/********************************
+ * Input: index1, index2 are two index of vector
+ * Range 0 to T.nap-1
+ * En el proceso, se calcula el indice de concordancia (se puede incluir cita)
+ * Output: Valor entre 0 y 1 ejemplo
+ * *******************************/
 float concordanceAnts(int index1, int index2){
 	float total = 0;
 	int i;
