@@ -44,11 +44,22 @@ typedef struct PHEROMONE{
 	int strictOR;			/* OutRanking Strict value. */
 	int weakOR;				/* OutRanking weak or k-preference value. */
 	int netscoreOR;			/* OutRanking netscore value. */
+	float netscore;			/* OutRanking netscore value. */
+	// float *sigma;			/* OutRanking sigma value. */
+	float *preference;			/* OutRanking preference value. */
+	float *frontier;			/* OutRanking frontier value. */
 	double mmf;					/* Maximin fitness value */
 	int rank;					/* Rank associated by the R2 ranking algorithm */
 	int rankOR;					/* Rank associated by the Outranking algorithm */
 	int weight_index;
 }PHEROMONE;
+
+typedef struct DATA{
+	double *nFx; 				/* Normalized objective vector */
+	float netscore;			/* OutRanking netscore value. */
+	float *sigma;			/* OutRanking sigma value. */
+	float *frontier;			/* OutRanking frontier value. */
+}DATA;
 
 typedef struct ARCHIVE{
 	PHEROMONE *pheromones;		/* Pheromones */
