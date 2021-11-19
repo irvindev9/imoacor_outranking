@@ -1,24 +1,9 @@
 #include "../headers/Outranking.h"
 
-// float Epsilon = 0.1; // 0.05 a 0.1
-// float Beta = 0.35; // 0.25 a 0.4
-// float Lamdba = 0.6; // 0.55 a 0.75
-float weights[10];
-
-float valueU = 0.05; // 0.01 a 0.06 > .04 y .01
-float valueS = 0.1; // 0.1 a 0.16 > (veto + indiferencia) / 2
-float valueV = 0.2; // 0.2 a 0.3 > 0.10 y 0.20
-
-// Subtract the values in that target and divide them over the value of that parameter in sigma
-
-// Preferences dictionary
-// 1 = Strict preference
-// 2 = Indifference
-// 3 = Weak preference
-// 4 = Incomparability
-// 5 = k-Preference
-// 0 = null
-
+/**
+ * @brief Used as utility to read the preferences
+ * @return (void)
+ * */
 void readData(){
     int i, j;
     for(i = 0; i < T.nap; i++){	
@@ -33,6 +18,10 @@ void readData(){
 	}
 }
 
+/**
+ * @brief Read the configuration file
+ * @return (void)
+ * */
 void readVars(){
 	int i;
 
@@ -61,6 +50,11 @@ void readVars(){
 	
 }
 
+/**
+ * @brief Main function of outranking for pheromones
+ * @param size of the solutions / size = M + T.nap
+ * @return (void)
+ * */
 void ORankingPheromones(int size){
 	int i, j;
 
@@ -137,7 +131,11 @@ void ORankingPheromones(int size){
 
 }
 
-// Initialize Outranking Configuration
+/**
+ * @brief Initialize the outranking configuration, readed from output/DM%d_%s_config.txt
+ * @param dm number of the DM file
+ * @return (void)
+ * */
 void initValues(int dm){
 	int i, j;
 
@@ -248,7 +246,12 @@ void initValues(int dm){
 	}
 }
 
-// Function to generate random values between a range
+/**
+ * @brief Generate random values between a range
+ * @param a minimum value
+ * @param b maximum value
+ * @return random value
+ * */
 float generateRandomValue(float a, float b) {
     float random = ((float) rand()) / (float) RAND_MAX;
     float diff = b - a;
@@ -256,7 +259,12 @@ float generateRandomValue(float a, float b) {
     return a + r;
 }
 
-// Calculate concordance of two vectors
+/**
+ * @brief Calculate concordance of two vectors
+ * @param index1 index of the first vector
+ * @param index2 index of the second vector
+ * @return concordance
+ * */
 float concordance(int index1, int index2){
 	// c(x1, x2) = c1(x1, x2) + c2(x1, x2) + c3(x1, x2) + ...
 	float total = 0;
@@ -278,7 +286,12 @@ float concordance(int index1, int index2){
 	return total;
 }
 
-// Calculate discordance of two vectors
+/**
+ * @brief Calculate discordance of two vectors
+ * @param index1 index of the first vector
+ * @param index2 index of the second vector
+ * @return discordance
+ * */
 float discordance(int index1, int index2){
 	// d(x1, x2) = min{1-d1(x1, x2), 1-d2(x1, x2), 1-d3(x1, x2), ... }
 
@@ -308,7 +321,20 @@ float discordance(int index1, int index2){
 	return min_value;
 }
 
-// Select preference of two vectors (by sigma)
+/**
+ * @brief Select preference of two vectors (by sigma)
+ * @param index1 index of the first vector
+ * @param index2 index of the second vector
+ * @return preference
+ * 
+ * Preferences dictionary
+ * 1 = Strict preference
+ * 2 = Indifference
+ * 3 = Weak preference
+ * 4 = Incomparability
+ * 5 = k-Preference
+ * 0 = null
+ * */
 float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 	float result = 0;
 
@@ -343,7 +369,12 @@ float preferenceIdentifier(float sigma_x, float sigma_y, boolean xdominatey){
 	return result;
 }
 
-// Say if x dominate y (two vectors)
+/**
+ * @brief Say if x dominate y (two vectors)
+ * @param index1 index of the first vector
+ * @param index2 index of the second vector
+ * @return TRUE if x dominate y, FALSE otherwise
+ * */
 boolean xdominatey(int index1, int index2){
 	int atleastone = 0;
 	int minlimit = 0;
@@ -365,7 +396,12 @@ boolean xdominatey(int index1, int index2){
 	}
 }
 
-// Calculate Outranking (Ants)
+/**
+ * @brief Calculate Outranking (Ants)
+ * @param index1 index of the first vector
+ * @param index2 index of the second vector
+ * @return (void)
+ * */
 void ORankingAnts(int size){
 	int i, j;
 
@@ -441,12 +477,13 @@ void ORankingAnts(int size){
 	fclose(arch);
 }
 
-/********************************
- * Input: index1, index2 are two index of vector
- * Range 0 to T.nap-1
- * En el proceso, se calcula el indice de concordancia (se puede incluir cita)
- * Output: Valor entre 0 y 1 ejemplo
- * *******************************/
+/**
+ * @brief Calculate concordance (two vectors)
+ * @param index1 index of the first vector
+ * @param index2 index of the second vector
+ * @exception if index1 or index2 are out of range (0 to T.nap-1)
+ * @return concordance value
+ * */
 float concordanceAnts(int index1, int index2){
 	float total = 0;
 	int i;
@@ -467,6 +504,13 @@ float concordanceAnts(int index1, int index2){
 	return total;
 }
 
+/**
+ * @brief Calculate discordance (two vectors)
+ * @param index1 index of the first vector
+ * @param index2 index of the second vector
+ * @exception if index1 or index2 are out of range (0 to T.nap-1)
+ * @return discordance value
+ * */
 float discordanceAnts(int index1, int index2){
 	float min_value = 1;
 	int i;
@@ -494,6 +538,12 @@ float discordanceAnts(int index1, int index2){
 	return min_value;
 }
 
+/**
+ * @brief Say if x dominate y (two vectors)
+ * @param index1 index of the first vector
+ * @param index2 index of the second vector
+ * @return TRUE if x dominate y, FALSE otherwise
+ * */
 boolean xdominateyAnts(int index1, int index2){
 	int atleastone = 0;
 	int minlimit = 0;
@@ -515,7 +565,10 @@ boolean xdominateyAnts(int index1, int index2){
 	}
 }
 
-
+/**
+ * @brief Outranking from file (global file that contains all the results)
+ * @return best solution
+ * */
 void outrankingFromFile(){
 
 	initValues(1);
