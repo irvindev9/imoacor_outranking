@@ -571,122 +571,413 @@ boolean xdominateyAnts(int index1, int index2){
  * */
 void outrankingFromFile(){
 
-	initValues(1);
+	int dmfile = 1;
 
-	FILE *arch;
-	arch = fopen("output/globaldeprueba.txt", "r");
-	// arch = fopen("output/Globalwithoutduplicates.txt", "r");
-	if(arch == NULL){
-		printf("Error! The file couldn't be created\n");
-		exit(-1);
-	}
-	char line[5000];
-	int contlimiter = 0;
-	
+	for(dmfile = 1; dmfile <= 10; dmfile++){
+		initValues(dmfile);
 
-	int max_file_size = 200000;
-
-	float weights[k];
-	float weights2[k];
-	float sigmaArray[max_file_size][max_file_size];
-	float preferencesArray[max_file_size][max_file_size];
-	float frontierArray[max_file_size][3];
-	int i, j;
-	int size_of_file = 0;
-
-	while( fgets(line,5000,arch) ) {
-		int init_size = strlen(line);
-		char delim[] = " ";
-		char *ptr = strtok(line, delim);
-		int cont_in = 0;
-		while(ptr != NULL)
-		{
-			float val = atof(ptr);
-			weights[cont_in] = val;
-
-			printf("val = %f \n",val);
-			ptr = strtok(NULL, delim);
-			cont_in++;
-		}
-
-		FILE *arch2;
-		arch2 = fopen("output/globaldeprueba.txt", "r");
-		// arch2 = fopen("output/Globalwithoutduplicates.txt", "r");
-		if(arch2 == NULL){
+		FILE *arch;
+		arch = fopen("output/Globalwithoutduplicates6.txt", "r"); // Global without duplicates file
+		if(arch == NULL){
 			printf("Error! The file couldn't be created\n");
 			exit(-1);
 		}
-		char line2[5000];
-		int contlimiter2 = 0;
+		char line[5000];
+		int contlimiter = 0;
 
-		while( fgets(line2,5000,arch2) ) {
-			int init_size2 = strlen(line2);
-			char delim2[] = " ";
-			char *ptr2 = strtok(line2, delim2);
-			int cont_in2 = 0;
-			while(ptr2 != NULL){
-				float val2 = atof(ptr2);
-				weights2[cont_in2] = val2;
+		int i, j;
+		int size_of_file = 0;
 
-				printf("val2 %d %d = %f \n", cont_in2, contlimiter2, val2);
-				ptr2 = strtok(NULL, delim2);
-				cont_in2++;
+		while( fgets(line,5000,arch) ) {
+			int init_size = strlen(line);
+			char delim[] = " ";
+			char *ptr = strtok(line, delim);
+			int cont_in = 0;
+			while(ptr != NULL)
+			{
+				float val = atof(ptr);
+				T.pheromones[size_of_file].nFx[cont_in] = val;
+
+				ptr = strtok(NULL, delim);
+				cont_in++;
 			}
-			float concordanse = 0;
-			int ic;
-
-			for(ic = 0; ic < k; ic++){
-				boolean xIky;
-				boolean xPky;
-
-				xIky = abs(weights[ic] - weights2[ic]) <= vectorU[ic];
-
-				xPky = weights[ic] < weights2[ic] && !(xIky);
-
-				if(xPky || xIky){
-					concordanse += vectorW[ic];
-				}
-			}
-
-			float min_value = 1;
-			int id;
-
-			for(id = 0;id < k;id++){
-				float discordanse = 0;
-
-				float dis = weights[id] - weights2[id];
-
-				if(dis < vectorS[id]){
-					discordanse = 0;
-				}
-				if((vectorS[id] <= dis) && (dis < vectorV[id])){
-					discordanse = (dis - vectorU[i]) / (vectorV[id] - vectorU[id]);
-				}
-				if(dis >= vectorV[id]){
-					discordanse = 1;
-				}
-
-				if((1 - discordanse) < min_value){
-					min_value = 1 - discordanse;
-				}
-			}
-
-			// sigmaArray[contlimiter][contlimiter2] = concordanse * min_value;
-			// sigmaArray[contlimiter][contlimiter2] = 1.1;
-			// printf("val1 = %f ",min_value);
-			// printf("val2 = %f \n",concordanse);
-			contlimiter2++;
+			size_of_file++;
 		}
 
-		// contlimiter++;
-		size_of_file++;
+		printf("Size: %d...\n", size_of_file);
+
+		fclose(arch);
+
+		printf("Saved finished!!! \nContinue with outranking...\n");
+
+		// for(i = 0; i < size_of_file; i++){	
+		// 	for(j = 0; j < size_of_file; j++){
+		// 		T.pheromones[i].sigma[j] = concordance(i, j) * discordance(i, j);
+		// 	}
+		// }
+
+		// printf("Sigma finished!!! \nContinue with outranking...\n");
+
+		for(i = 0; i < size_of_file; i++){
+			T.pheromones[i].netscore = 0;
+			for(j = 0; j < size_of_file; j++){
+				T.pheromones[i].netscore += ((concordance(i, j) * discordance(i, j)) - (concordance(j, i) * discordance(j, i)));
+			}
+		}
+
+		// for(i = 0; i < size_of_file; i++){
+		// 	free(T.pheromones[i].nFx);
+		// }
+
+		printf("Netscore finished!!! \nContinue with outranking...\n");
+
+		float preference;
+
+		for(i = 0; i < size_of_file; i++){	
+			T.pheromones[i].frontier[0] = 0;
+			T.pheromones[i].frontier[1] = 0;
+			T.pheromones[i].frontier[2] = 0;
+			for(j = 0; j < size_of_file; j++){
+				if(i != j){
+					preference = preferenceIdentifier((concordance(i, j) * discordance(i, j)), (concordance(j, i) * discordance(j, i)), xdominatey(i, j));
+
+					// Estrictamente dominada
+					if(preference == 1){
+						T.pheromones[i].frontier[0] += 1;
+					}
+
+					// Debilmente dominadas / k-preferencia
+					if(preference == 3 || preference == 5){
+						T.pheromones[i].frontier[1] += 1;
+					}
+
+					//Flujo neto
+					if(T.pheromones[j].netscore > T.pheromones[i].netscore){
+						T.pheromones[i].frontier[2] += 1;
+					}
+					
+				}else{
+					preference = 0;
+				}
+			}
+
+		}
+
+		printf("Preference finished!!! \nContinue with printing results...\n");
+
+		FILE *outresults;
+		char str[100];
+		sprintf(str, "output/GlobalResults_%s_%dD_DM%d.txt", Fname, k, dmfile);
+		outresults = fopen(str, "w");
+		if(outresults == NULL){
+			printf("Error! The file %s couldn't be created\n", str);
+			exit(-1);
+		}
+
+		for(i = 0; i < size_of_file; i++){
+			fprintf(outresults, "(%d, %d, %d) \n", (int)T.pheromones[i].frontier[0], (int)T.pheromones[i].frontier[1], (int)T.pheromones[i].frontier[2]);
+		}
+
+		fclose(outresults);
+	}
+}
+
+void manhattanChebyshev(){
+
+	FILE *arch2;
+	// arch = fopen("output/globaldeprueba.txt", "r");
+	char str[100];
+	sprintf(str, "output/resultsDManAvg.csv");
+	arch2 = fopen(str, "w");
+	if(arch2 == NULL){
+		printf("Errorm12! The file couldn't be created\n");
+		exit(-1);
 	}
 
-	fclose(arch);
+	fprintf(arch2, "IO-ACO, iMOACOR\n");	
 
-	// for(i = 0; i < size_of_file; i++){
-	// 	for(j = 0; j < size_of_file; j++){
-	// 		printf("sigma: %f \n", sigmaArray[i][j]);
-	// 	}
-	// }
+	fclose(arch2);
+
+	sprintf(str, "output/resultsDManMin.csv");
+	arch2 = fopen(str, "w");
+	if(arch2 == NULL){
+		printf("Errorm2! The file couldn't be created\n");
+		exit(-1);
+	}
+
+	fprintf(arch2, "IO-ACO, iMOACOR\n");	
+
+	fclose(arch2);
+
+	sprintf(str, "output/resultsDChebAvg.csv");
+	arch2 = fopen(str, "w");
+	if(arch2 == NULL){
+		printf("Errorm3! The file couldn't be created\n");
+		exit(-1);
+	}
+
+	fprintf(arch2, "IO-ACO, iMOACOR\n");	
+
+	fclose(arch2);
+
+	sprintf(str, "output/resultsDChebMin.csv");
+	arch2 = fopen(str, "w");
+	if(arch2 == NULL){
+		printf("Errorm4! The file couldn't be created\n");
+		exit(-1);
+	}
+
+	fprintf(arch2, "IO-ACO, iMOACOR\n");	
+
+	fclose(arch2);
+
+	int dmfile = 1;
+
+	for(dmfile = 1; dmfile <= 10; dmfile++){
+		// initValues(dmfile);
+
+		FILE *arch;
+		// arch = fopen("output/globaldeprueba.txt", "r");
+		char str[100];
+		sprintf(str, "output/DM%d.txt", dmfile);
+		arch = fopen(str, "r");
+		if(arch == NULL){
+			printf("Error! The file %s couldn't be created\n", str);
+			exit(-1);
+		}
+		char line[5000];
+		int contlimiter = 0;
+
+		int i, j;
+		int size_of_file_best = 0;
+		float best_solution[10];
+
+		while( fgets(line,5000,arch) ) {
+			int init_size = strlen(line);
+			char delim[] = " ";
+			char *ptr = strtok(line, delim);
+			int cont_in = 0;
+			while(ptr != NULL)
+			{
+				if(size_of_file_best == 0){
+					float val = atof(ptr);
+					best_solution[cont_in] = val;
+				}
+				
+
+				ptr = strtok(NULL, delim);
+				cont_in++;
+			}
+			size_of_file_best++;
+		}
+
+		printf("File: %s ...\n", str);
+		printf("Size: %f ...\n", best_solution[9]);
+
+		fclose(arch);
+
+		int run = 1;
+
+		for(run = 1; run <= 30; run++){
+
+			sprintf(str, "output/ioaco_DM%d_%s_%dD_R%d.pof", dmfile, Fname, k, run);
+			arch = fopen(str, "r");
+			if(arch == NULL){
+				printf("Error! The file %s couldn't be created\n", str);
+				exit(-1);
+			}
+			
+			int size_of_file_ioaco = 0;
+
+			while( fgets(line,5000,arch) ) {
+				int init_size = strlen(line);
+				char delim[] = " ";
+				char *ptr = strtok(line, delim);
+				int cont_in = 0;
+				while(ptr != NULL)
+				{
+					float val = atof(ptr);
+					Ants[size_of_file_ioaco].nFx[cont_in] = val;
+
+					ptr = strtok(NULL, delim);
+					cont_in++;
+				}
+				size_of_file_ioaco++;
+			}
+
+			// printf("File: %s ...\n", str);
+			// printf("Size: %f ...\n", Ants[0].nFx[9]);
+
+			fclose(arch);
+
+			sprintf(str, "output/original_DM1_%s_%dD_R%d.pof", Fname, k, run);
+			arch = fopen(str, "r");
+			if(arch == NULL){
+				printf("Error! The file %s couldn't be created\n", str);
+				exit(-1);
+			}
+			
+			int size_of_file_original = 0;
+
+			while( fgets(line,5000,arch) ) {
+				int init_size = strlen(line);
+				char delim[] = " ";
+				char *ptr = strtok(line, delim);
+				int cont_in = 0;
+				while(ptr != NULL)
+				{
+					float val = atof(ptr);
+					T.pheromones[size_of_file_original].nFx[cont_in] = val;
+
+					ptr = strtok(NULL, delim);
+					cont_in++;
+				}
+				size_of_file_original++;
+			}
+
+			// printf("File: %s ...\n", str);
+			// printf("Size: %f ...\n", T.pheromones[0].nFx[9]);
+
+			fclose(arch);
+
+			printf("Saved finished!!! \nContinue with metrics...\n");
+
+			//IOACO
+
+			float min_man = 9999999;
+			float avg_man = 0;
+			
+
+			for(i = 0; i < size_of_file_ioaco; i++){
+				float total = 0;
+				for(j = 0; j < k; j++){
+					printf("min_man: %f ...\n", (Ants[i].nFx[j] - best_solution[j]));
+					total += (Ants[i].nFx[j] > best_solution[j]) ? (Ants[i].nFx[j] - best_solution[j]) : 0;
+				}
+
+				// total = sqrt(total);
+
+				min_man = (min_man > total) ? total : min_man;
+
+				avg_man += total;
+			}
+
+			avg_man = avg_man / size_of_file_ioaco;
+
+			// IMOACOR
+
+			float min_man_original = 9999999;
+			float avg_man_original = 0;
+			
+
+			for(i = 0; i < size_of_file_original; i++){
+				float total = 0;
+				for(j = 0; j < k; j++){
+					// printf("min_man_original: %f ...\n", (T.pheromones[i].nFx[j] - best_solution[j]));
+					total += (T.pheromones[i].nFx[j] > best_solution[j]) ? (T.pheromones[i].nFx[j] - best_solution[j]) : 0;
+				}
+
+				// total = sqrt(total);
+
+				min_man_original = (min_man_original > total) ? total : min_man_original;
+
+				avg_man_original += total;
+			}
+
+			avg_man_original = avg_man_original / size_of_file_original;
+
+			// printf("min_man_original: %f ...\n", min_man_original);
+			// printf("avg_man_original: %f ...\n", avg_man_original);
+
+			sprintf(str, "output/resultsDManAvg.csv");
+			arch2 = fopen(str, "a");
+			if(arch2 == NULL){
+				printf("Errorm5! The file couldn't be created\n");
+				exit(-1);
+			}
+
+			fprintf(arch2, "%f, %f\n", avg_man, avg_man_original);	
+
+			fclose(arch2);
+
+			sprintf(str, "output/resultsDManMin.csv");
+			arch2 = fopen(str, "a");
+			if(arch2 == NULL){
+				printf("Errorm6! The file couldn't be created\n");
+				exit(-1);
+			}
+
+			fprintf(arch2, "%f, %f\n", min_man, min_man_original);	
+
+			fclose(arch2);
+
+			//IOACO
+
+			float min_cheb = 9999999;
+			float avg_cheb = 0;
+			
+
+			for(i = 0; i < size_of_file_ioaco; i++){
+				float total = 0;
+				for(j = 0; j < k; j++){
+					if((Ants[i].nFx[j] > best_solution[j]) && (Ants[i].nFx[j] - best_solution[j]) > total){
+						total = Ants[i].nFx[j] - best_solution[j];
+					}
+				}
+
+				min_cheb = (min_cheb > total) ? total : min_cheb;
+
+				avg_cheb += total;
+			}
+
+			avg_cheb = avg_cheb / size_of_file_ioaco;
+
+			//IMOACOR
+
+			float min_cheb_original = 9999999;
+			float avg_cheb_original = 0;
+			
+
+			for(i = 0; i < size_of_file_original; i++){
+				float total = 0;
+				// total = T.pheromones[i].nFx[0] - best_solution[0];
+				for(j = 0; j < k; j++){
+					if((T.pheromones[i].nFx[j] > best_solution[j]) && (T.pheromones[i].nFx[j] - best_solution[j]) > total){
+						total = T.pheromones[i].nFx[j] - best_solution[j];
+					}
+				}
+
+				min_cheb_original = (min_cheb_original > total) ? total : min_cheb_original;
+
+				avg_cheb_original += total;
+			}
+
+			avg_cheb_original = avg_cheb_original / size_of_file_original;
+
+			sprintf(str, "output/resultsDChebAvg.csv");
+			arch2 = fopen(str, "a");
+			if(arch2 == NULL){
+				printf("Errorm7! The file couldn't be created\n");
+				exit(-1);
+			}
+
+			fprintf(arch2, "%f, %f\n", avg_cheb, avg_cheb_original);	
+
+			fclose(arch2);
+
+			sprintf(str, "output/resultsDChebMin.csv");
+			arch2 = fopen(str, "a");
+			if(arch2 == NULL){
+				printf("Errorm8! The file couldn't be created\n");
+				exit(-1);
+			}
+
+			fprintf(arch2, "%f, %f\n", min_cheb, min_cheb_original);	
+
+			fclose(arch2);
+
+			printf("RUN#: %d\n", run);
+		}
+
+	}
 }
