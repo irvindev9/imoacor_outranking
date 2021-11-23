@@ -11,6 +11,13 @@
 
 void run(int, int);
 
+/**
+ * @brief      Main function
+ *
+ * @param[in]  argc  The argc name of the file
+ * @param      argv  The argv argument of the command line
+ *
+ */
 int main(int argc, char *argv[]){
 
 	if(argc != 2 && argc != 3) {
@@ -86,6 +93,12 @@ int main(int argc, char *argv[]){
 	return 1;
 }
 
+/**
+ * @brief Runs the algorithm.
+ * @param exec number of the execution.
+ * @param dm Desition maker number
+ * @return (void) files with the results are saved.
+ */
 void run(int exec, int dm){
 	genCounter = 0;
 	// Generate randomly initial solutions

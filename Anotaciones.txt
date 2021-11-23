@@ -1,9 +1,0 @@
-W : los pesos deben de sumar 1 
-Epsilon Beta Gamma / .1 Valor peqyeno / .5 beta entre lamdba y epsilon .25 - .40 / lamdba es valor grande mayor de .5
-
-Recordar para hacer el estudio de los umbrales
-
-indiferencia : .05
-veto : .2
-pre veto : .1
-

@@ -23,6 +23,5 @@ void ORankingAnts(int);
 float concordanceAnts(int, int);
 float discordanceAnts(int, int);
 boolean xdominateyAnts(int, int);
-void outrankingFromFile();
 
 #endif
